@@ -20,240 +20,272 @@ body{
 background:#050505;
 color:white;
 min-height:100vh;
+overflow-x: hidden;
 }
 
-
 /* GOLD BACKGROUND */
-
 body:before{
-
 content:"";
 position:fixed;
-width:500px;
-height:500px;
+width:300px;
+height:300px;
 background:#d4af37;
-opacity:.15;
+opacity:.1;
 filter:blur(100px);
 animation:move 8s infinite alternate;
-
+pointer-events: none;
 }
 
 @keyframes move{
-
-from{
-transform:translate(0,0);
+from{ transform:translate(0,0); }
+to{ transform:translate(200px,200px); }
 }
-
-to{
-transform:translate(500px,300px);
-}
-
-}
-
 
 /* LOGIN */
-
 .login{
-
 height:100vh;
 display:flex;
 align-items:center;
 justify-content:center;
-
+padding: 15px;
 }
-
 
 .login-box{
-
-width:360px;
+width:100%;
+max-width:360px;
 background:#111;
-padding:35px;
+padding:35px 25px;
 border-radius:25px;
 border:1px solid #d4af37;
-box-shadow:0 0 30px #d4af37;
+box-shadow:0 0 30px rgba(212, 175, 55, 0.3);
 text-align:center;
-
 }
 
-
 .logo{
-
-width:100px;
-height:100px;
+width:90px;
+height:90px;
 border-radius:50%;
 border:3px solid #d4af37;
 margin:auto;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:45px;
+font-size:40px;
 font-weight:bold;
 color:#d4af37;
-
 }
-
 
 h1{
-
 color:#d4af37;
-margin:20px 0;
-
+margin:20px 0 10px 0;
+font-size: 24px;
 }
 
-
 input,select{
-
 width:100%;
 padding:14px;
 margin:8px 0;
 background:#222;
-border:none;
+border:1px solid #333;
 border-radius:10px;
 color:white;
-
+font-size: 15px;
+outline: none;
 }
 
+input:focus, select:focus{
+border-color: #d4af37;
+}
 
 button{
-
 width:100%;
 padding:14px;
 background:#d4af37;
 border:none;
 border-radius:10px;
 font-weight:bold;
+font-size: 16px;
 cursor:pointer;
-
+color: black;
+transition: 0.2s;
+margin-top: 10px;
 }
-
 
 button:hover{
-
 background:white;
-
 }
 
-
-/* SYSTEM */
-
-
-#system{
-
-display:none;
-
+/* SYSTEM LAYOUT (RESPONSIVE) */
+#system {
+display: none;
 }
 
+/* মোবাইল ফার্স্ট ও ডেস্কটপ গ্রিড লেআউট */
+.wrapper {
+display: flex;
+flex-direction: column;
+}
 
 .sidebar{
-
-position:fixed;
-width:230px;
-height:100vh;
+width:100%;
 background:#111;
-border-right:1px solid #d4af37;
-padding:20px;
-
+border-bottom:1px solid #d4af37;
+padding:15px;
+position: static;
+height: auto;
 }
-
 
 .sidebar h2{
-
 text-align:center;
 color:#d4af37;
-
+margin-bottom: 15px;
+font-size: 22px;
 }
 
+.menu {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+gap: 8px;
+}
 
 .menu div{
-
 background:#222;
-padding:14px;
-margin:8px 0;
-border-radius:10px;
+padding:10px 5px;
+text-align: center;
+border-radius:8px;
 cursor:pointer;
-
+font-size: 13px;
+font-weight: 500;
+transition: 0.2s;
+border: 1px solid #333;
 }
-
 
 .menu div:hover{
-
 background:#d4af37;
 color:black;
-
+border-color: #d4af37;
 }
-
 
 .main{
-
-margin-left:230px;
-padding:30px;
-
+padding:15px;
+width: 100%;
 }
-
 
 .card{
-
 background:#111;
-border:1px solid #d4af37;
-border-radius:20px;
-padding:25px;
-margin-bottom:20px;
-
+border:1px solid #222;
+border-radius:15px;
+padding:15px;
+margin-bottom:15px;
+box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
+.card h3 {
+font-size: 16px;
+margin-bottom: 12px;
+color: #eee;
+border-left: 3px solid #d4af37;
+padding-left: 8px;
+}
 
 .cards{
-
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:20px;
-
+grid-template-columns: repeat(2, 1fr);
+gap:12px;
 }
-
 
 .number{
-
-font-size:35px;
+font-size:22px;
 color:white;
-margin-top:15px;
-
+margin-top:8px;
+font-weight: bold;
 }
-
 
 .section{
-
 display:none;
-
 }
-
 
 .gold{
-
 color:#d4af37;
-
+font-size: 22px;
+margin-bottom: 15px;
 }
 
+/* TABLE RESPONSIVENESS FIX */
+.table-container {
+width: 100%;
+overflow-x: auto;
+-webkit-overflow-scrolling: touch;
+border-radius: 8px;
+border: 1px solid #222;
+}
 
 table{
-
+width: 100%;
 border-collapse:collapse;
-
+min-width: 500px; /* টেবিল যাতে সংকুচিত না হয় */
+background: #111;
 }
-
 
 th{
-
 color:#d4af37;
-
+background: #161616;
+font-size: 14px;
+font-weight: 600;
 }
-
 
 td,th{
-
-padding:10px;
-
+padding:12px 10px;
+text-align: center;
+border-bottom: 1px solid #222;
+font-size: 14px;
 }
 
+tr:hover {
+background: #161616;
+}
+
+/* DESKTOP SCREEN ADJUSTMENT (কম্পিউটারের জন্য রূপান্তর) */
+@media (min-width: 768px) {
+    .wrapper {
+        flex-direction: row;
+    }
+    .sidebar {
+        position: fixed;
+        width: 230px;
+        height: 100vh;
+        border-right: 1px solid #d4af37;
+        border-bottom: none;
+        padding: 20px;
+    }
+    .menu {
+        display: block;
+    }
+    .menu div {
+        margin: 8px 0;
+        padding: 14px;
+        text-align: left;
+        font-size: 15px;
+    }
+    .main {
+        margin-left: 230px;
+        padding: 30px;
+    }
+    .cards {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+    .number {
+        font-size: 30px;
+    }
+    .card {
+        padding: 25px;
+        margin-bottom: 20px;
+    }
+    .gold {
+        font-size: 28px;
+    }
+}
 
 </style>
 
@@ -262,1326 +294,377 @@ padding:10px;
 
 <body>
 
-
 <!-- LOGIN -->
-
-
 <div class="login" id="login">
-
-
 <div class="login-box">
-
-
-<div class="logo">
-BJ
-</div>
-
-
-<h1>
-বাঁধন জুয়েলার্স
-</h1>
-
-
-<p>
-Management System
-</p>
-
-
+<div class="logo">BJ</div>
+<h1>বাঁধন জুয়েলার্স</h1>
+<p style="color: #888; font-size: 14px; margin-bottom: 15px;">Management System</p>
 <input id="username" placeholder="Username">
-
-
 <input id="password" type="password" placeholder="Password">
-
-
-<button onclick="loginUser()">
-Login
-</button>
-
-
+<button onclick="loginUser()">Login</button>
 </div>
-
-
 </div>
-
-
 
 <!-- SYSTEM -->
-
-
 <div id="system">
+<div class="wrapper">
 
+    <div class="sidebar">
+        <h2>BJ SYSTEM</h2>
+        <div class="menu">
+            <div onclick="showPage('dashboard')">🏠 Dashboard</div>
+            <div onclick="showPage('employee')">👥 Employee</div>
+            <div onclick="showPage('sales')">🛒 Sales Memo</div>
+            <div onclick="showPage('mortgage')">💰 Mortgage</div>
+            <div onclick="showPage('stock')">📦 Stock</div>
+            <div onclick="showPage('customer')">👤 Customer</div>
+            <div onclick="showPage('report')">📊 Report</div>
+        </div>
+    </div>
 
-<div class="sidebar">
+    <div class="main">
 
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="section">
+            <h1 class="gold">Admin Dashboard</h1>
+            <div class="cards">
+                <div class="card">
+                    <h3>আজকের বিক্রি</h3>
+                    <div class="number" id="todaySale">৳0</div>
+                </div>
+                <div class="card">
+                    <h3>Cash</h3>
+                    <div class="number" id="cash">৳0</div>
+                </div>
+                <div class="card">
+                    <h3>Mortgage</h3>
+                    <div class="number" id="mortgageCount">0</div>
+                </div>
+                <div class="card">
+                    <h3>Profit</h3>
+                    <div class="number" id="profit">৳0</div>
+                </div>
+            </div>
+        </div>
 
-<h2>
-BJ
-</h2>
+        <!-- EMPLOYEE MANAGEMENT -->
+        <div id="employee" class="section">
+            <h1 class="gold">Employee Management</h1>
+            <div class="card">
+                <h3>নতুন কর্মচারী যোগ করুন</h3>
+                <input id="empName" placeholder="নাম">
+                <input id="empPhone" placeholder="মোবাইল">
+                <input id="empNid" placeholder="NID">
+                <select id="empRole">
+                    <option>Manager</option>
+                    <option>Staff</option>
+                </select>
+                <button onclick="addEmployee()">Create Employee</button>
+            </div>
+            <div class="card">
+                <h3>Employee List</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employeeTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
+        <!-- SALES SECTION -->
+        <div id="sales" class="section">
+            <h1 class="gold">Cash Memo / Sales</h1>
+            <div class="card">
+                <input id="customerName" placeholder="Customer Name">
+                <input id="customerPhone" placeholder="Phone Number">
+                <input id="productName" placeholder="Product Name">
+                <select id="carat">
+                    <option>22K (91.60%)</option>
+                    <option>21K (87.50%)</option>
+                    <option>18K (75%)</option>
+                </select>
+                <input id="weight" placeholder="Weight">
+                <input id="price" type="number" placeholder="Gold Price">
+                <input id="making" type="number" placeholder="Making Charge">
+                <input id="advance" type="number" placeholder="Advance">
+                <button onclick="saveMemo()">Save Memo</button>
+                <button onclick="printLastMemo()" style="background: white; color: black; margin-top: 8px;">Print Memo</button>
+            </div>
+            <div class="card">
+                <h3>Memo History</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Memo</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th>Due</th>
+                            </tr>
+                        </thead>
+                        <tbody id="memoTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-<div class="menu">
+        <!-- MORTGAGE -->
+        <div id="mortgage" class="section">
+            <h1 class="gold">বন্ধকি মাল Management</h1>
+            <div class="card">
+                <input id="mCustomer" placeholder="Customer Name">
+                <input id="mPhone" placeholder="Phone">
+                <input id="mGold" placeholder="Gold Details">
+                <input id="mAmount" type="number" placeholder="Amount">
+                <select id="mRate">
+                    <option value="3">৩ টাকা / ১০০</option>
+                    <option value="4">৪ টাকা / ১০০</option>
+                    <option value="5">৫ টাকা / ১০০</option>
+                </select>
+                <button onclick="addMortgage()">Save Mortgage</button>
+            </div>
+            <div class="card">
+                <h3>সক্রিয় বন্ধকের তালিকা</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Amount</th>
+                                <th>Rate & Profit</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mortgageTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
+        <!-- STOCK -->
+        <div id="stock" class="section">
+            <h1 class="gold">Gold Inventory</h1>
+            <div class="card">
+                <input id="stockName" placeholder="Gold Item">
+                <input id="stockWeight" placeholder="Weight">
+                <input id="stockQty" type="number" placeholder="Quantity">
+                <button onclick="addStock()">Add Stock</button>
+            </div>
+            <div class="card">
+                <h3>Stock Details</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Weight</th>
+                                <th>Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stockTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-<div onclick="showPage('dashboard')">
-🏠 Dashboard
+        <!-- CUSTOMER DATABASE -->
+        <div id="customer" class="section">
+            <h1 class="gold">Customer Database</h1>
+            <div class="card">
+                <input id="cusName" placeholder="Customer Name">
+                <input id="cusPhone" placeholder="Phone Number">
+                <input id="cusAddress" placeholder="Address">
+                <button onclick="addCustomer()">Save Customer</button>
+            </div>
+            <div class="card">
+                <h3>Customer List</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Address</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customerTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- REPORT -->
+        <div id="report" class="section">
+            <h1 class="gold">Reports</h1>
+            <div class="cards">
+                <div class="card">
+                    <h3>Total Sales</h3>
+                    <div class="number" id="reportSales">৳0</div>
+                </div>
+                <div class="card">
+                    <h3>Total Cash</h3>
+                    <div class="number" id="reportCash">৳0</div>
+                </div>
+                <div class="card">
+                    <h3>Total Mortgage</h3>
+                    <div class="number" id="reportMortgage">0</div>
+                </div>
+                <div class="card">
+                    <h3>Profit</h3>
+                    <div class="number" id="reportProfit">৳0</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
-
-
-<div onclick="showPage('employee')">
-👥 Employee
 </div>
-
-
-<div onclick="showPage('sales')">
-🛒 Sales Memo
-</div>
-
-
-<div onclick="showPage('mortgage')">
-💰 Mortgage
-</div>
-
-
-<div onclick="showPage('stock')">
-📦 Stock
-</div>
-
-
-<div onclick="showPage('customer')">
-👤 Customer
-</div>
-
-
-<div onclick="showPage('report')">
-📊 Report
-</div>
-
-
-</div>
-
-
-</div>
-
-
-
-<div class="main">
-
-
-
-<!-- DASHBOARD -->
-
-
-<div id="dashboard" class="section">
-
-
-<h1 class="gold">
-Admin Dashboard
-</h1>
-
-
-<div class="cards">
-
-
-<div class="card">
-
-<h3>
-আজকের বিক্রি
-</h3>
-
-<div class="number" id="todaySale">
-৳0
-</div>
-
-</div>
-
-
-
-<div class="card">
-
-<h3>
-Cash
-</h3>
-
-<div class="number" id="cash">
-৳0
-</div>
-
-</div>
-
-
-
-<div class="card">
-
-<h3>
-Mortgage
-</h3>
-
-<div class="number" id="mortgageCount">
-0
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Profit
-</h3>
-
-<div class="number" id="profit">
-৳0
-</div>
-
-</div>
-
-
-</div>
-
-
-</div>
-
-<!-- EMPLOYEE MANAGEMENT -->
-
-<div id="employee" class="section">
-
-
-<h1 class="gold">
-Employee Management
-</h1>
-
-
-<div class="card">
-
-
-<h3>
-নতুন কর্মচারী যোগ করুন
-</h3>
-
-
-<input id="empName" placeholder="নাম">
-
-
-<input id="empPhone" placeholder="মোবাইল">
-
-
-<input id="empNid" placeholder="NID">
-
-
-<select id="empRole">
-
-<option>
-Manager
-</option>
-
-<option>
-Staff
-</option>
-
-</select>
-
-
-<button onclick="addEmployee()">
-Create Employee
-</button>
-
-
-</div>
-
-
-
-<div class="card">
-
-
-<h3>
-Employee List
-</h3>
-
-
-<table width="100%" border="1">
-
-
-<thead>
-
-<tr>
-
-<th>ID</th>
-<th>Name</th>
-<th>Username</th>
-<th>Password</th>
-<th>Role</th>
-<th>Status</th>
-
-</tr>
-
-</thead>
-
-
-<tbody id="employeeTable">
-
-</tbody>
-
-
-</table>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-<!-- SALES SECTION -->
-
-
-<div id="sales" class="section">
-
-
-<h1 class="gold">
-Cash Memo / Sales
-</h1>
-
-
-
-<div class="card">
-
-
-<input id="customerName" placeholder="Customer Name">
-
-
-<input id="customerPhone" placeholder="Phone Number">
-
-
-<input id="productName" placeholder="Product Name">
-
-
-<select id="carat">
-
-<option>
-22K (91.60%)
-</option>
-
-<option>
-21K (87.50%)
-</option>
-
-<option>
-18K (75%)
-</option>
-
-
-</select>
-
-
-<input id="weight" placeholder="Weight">
-
-
-<input id="price" type="number" placeholder="Gold Price">
-
-
-<input id="making" type="number" placeholder="Making Charge">
-
-
-<input id="advance" type="number" placeholder="Advance">
-
-
-<button onclick="saveMemo()">
-
-Save Memo
-
-</button>
-
-
-<button onclick="printLastMemo()">
-
-Print Memo
-
-</button>
-
-
-</div>
-
-
-
-<div class="card">
-
-
-<h3>
-Memo History
-</h3>
-
-
-<table width="100%" border="1">
-
-
-<thead>
-
-<tr>
-
-<th>Memo</th>
-<th>Customer</th>
-<th>Total</th>
-<th>Due</th>
-
-</tr>
-
-</thead>
-
-
-<tbody id="memoTable">
-
-</tbody>
-
-
-</table>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-<!-- MORTGAGE -->
-
-
-<div id="mortgage" class="section">
-
-
-<h1 class="gold">
-বন্ধকি মাল Management
-</h1>
-
-
-
-<div class="card">
-
-
-<input id="mCustomer" placeholder="Customer Name">
-
-
-<input id="mPhone" placeholder="Phone">
-
-
-<input id="mGold" placeholder="Gold Details">
-
-
-<input id="mAmount" type="number" placeholder="Amount">
-
-
-
-<select id="mRate">
-
-
-<option value="3">
-৩ টাকা / ১০০
-</option>
-
-
-<option value="4">
-৪ টাকা / ১০০
-</option>
-
-
-<option value="5">
-৫ টাকা / ১০০
-</option>
-
-
-</select>
-
-
-<button onclick="addMortgage()">
-
-Save Mortgage
-
-</button>
-
-
-</div>
-
-
-
-<div class="card">
-
-
-<table width="100%" border="1">
-
-
-<thead>
-
-<tr>
-
-<th>ID</th>
-<th>Name</th>
-<th>Amount</th>
-<th>Rate</th>
-<th>Status / Release</th>
-
-</tr>
-
-
-</thead>
-
-
-<tbody id="mortgageTable">
-
-</tbody>
-
-
-</table>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-<!-- STOCK -->
-
-
-<div id="stock" class="section">
-
-
-<h1 class="gold">
-Gold Inventory
-</h1>
-
-
-<div class="card">
-
-
-<input id="stockName" placeholder="Gold Item">
-
-
-<input id="stockWeight" placeholder="Weight">
-
-
-<input id="stockQty" type="number" placeholder="Quantity">
-
-
-<button onclick="addStock()">
-
-Add Stock
-
-</button>
-
-
-</div>
-
-
-
-<div class="card">
-
-
-<table width="100%" border="1">
-
-
-<thead>
-
-<tr>
-
-<th>Item</th>
-<th>Weight</th>
-<th>Qty</th>
-
-</tr>
-
-</thead>
-
-
-<tbody id="stockTable">
-
-</tbody>
-
-
-</table>
-
-
-</div>
-
-
-
-</div>
-
-<!-- CUSTOMER DATABASE -->
-
-<div id="customer" class="section">
-
-
-<h1 class="gold">
-Customer Database
-</h1>
-
-
-<div class="card">
-
-
-<input id="cusName" placeholder="Customer Name">
-
-
-<input id="cusPhone" placeholder="Phone Number">
-
-
-<input id="cusAddress" placeholder="Address">
-
-
-<button onclick="addCustomer()">
-
-Save Customer
-
-</button>
-
-
-</div>
-
-
-
-<div class="card">
-
-
-<table width="100%" border="1">
-
-
-<thead>
-
-<tr>
-
-<th>Name</th>
-<th>Phone</th>
-<th>Address</th>
-
-</tr>
-
-</thead>
-
-
-<tbody id="customerTable">
-
-</tbody>
-
-
-</table>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-<!-- REPORT -->
-
-
-<div id="report" class="section">
-
-
-<h1 class="gold">
-Reports
-</h1>
-
-
-<div class="cards">
-
-
-<div class="card">
-
-<h3>
-Total Sales
-</h3>
-
-<div class="number" id="reportSales">
-৳0
-</div>
-
-
-</div>
-
-
-
-<div class="card">
-
-<h3>
-Total Cash
-</h3>
-
-<div class="number" id="reportCash">
-৳0
-</div>
-
-
-</div>
-
-
-
-<div class="card">
-
-<h3>
-Total Mortgage
-</h3>
-
-<div class="number" id="reportMortgage">
-0
-</div>
-
-
-</div>
-
-
-
-<div class="card">
-
-<h3>
-Profit
-</h3>
-
-<div class="number" id="reportProfit">
-৳0
-</div>
-
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-</div>
-
-
-</div>
-
-
-
-
-
 
 <script>
 
-
 // LOGIN
-
-
 function loginUser(){
+    let u = document.getElementById("username").value;
+    let p = document.getElementById("password").value;
 
-
-let u=
-document.getElementById("username").value;
-
-
-let p=
-document.getElementById("password").value;
-
-
-
-if(u=="Bhadon" && p=="4311"){
-
-
-document.getElementById("login").style.display="none";
-
-
-document.getElementById("system").style.display="block";
-
-
-showPage("dashboard");
-
-
+    if(u === "Bhadon" && p === "4311"){
+        document.getElementById("login").style.display="none";
+        document.getElementById("system").style.display="block";
+        showPage("dashboard");
+    } else {
+        alert("Wrong Login");
+    }
 }
-
-else{
-
-
-alert("Wrong Login");
-
-
-}
-
-
-}
-
-
-
-
 
 // PAGE OPEN
-
-
 function showPage(page){
-
-
-let sections=
-document.querySelectorAll(".section");
-
-
-sections.forEach(s=>{
-
-s.style.display="none";
-
-});
-
-
-document.getElementById(page).style.display="block";
-
-
+    let sections = document.querySelectorAll(".section");
+    sections.forEach(s=>{ s.style.display="none"; });
+    document.getElementById(page).style.display="block";
+    
+    // মোবাইল স্ক্রিনে পেজ চেঞ্জ হলে একদম ওপরে স্ক্রল করার জন্য
+    window.scrollTo({top: 0, behavior: 'smooth'});
 }
-
-
-
-
 
 // EMPLOYEE SYSTEM
-
-
 let employees=[];
-
-
 let empID=0;
 
-
-
 function addEmployee(){
+    if(!empName.value.trim()){ alert("নাম লিখুন"); return; }
+    empID++;
+    let name = empName.value;
+    let phone = empPhone.value;
+    let user = name.toLowerCase().replace(/\s+/g, '') + phone.slice(-4);
+    let pass = "BJ#" + phone.slice(-4);
 
+    let data={
+        id:"EMP-"+empID,
+        name:name,
+        username:user,
+        password:pass,
+        role:empRole.value,
+        status:"Active"
+    };
 
-empID++;
-
-
-let name=
-empName.value;
-
-
-let phone=
-empPhone.value;
-
-
-let user=
-name.toLowerCase()
-+
-phone.slice(-4);
-
-
-
-let pass=
-"BJ#"
-+
-phone.slice(-4);
-
-
-
-let data={
-
-id:"EMP-"+empID,
-
-name:name,
-
-username:user,
-
-password:pass,
-
-role:empRole.value,
-
-status:"Active"
-
-};
-
-
-
-employees.push(data);
-
-
-showEmployees();
-
-
-
-alert(
-"Employee Created\nUsername: "
-+user+
-"\nPassword: "
-+pass
-);
-
-
-
+    employees.push(data);
+    showEmployees();
+    alert("Employee Created\nUsername: "+user+"\nPassword: "+pass);
+    empName.value = ''; empPhone.value = ''; empNid.value = '';
 }
-
-
-
 
 function showEmployees(){
-
-
-let table=
-document.getElementById("employeeTable");
-
-
-table.innerHTML="";
-
-
-
-employees.forEach(e=>{
-
-
-table.innerHTML+=`
-
-<tr>
-
-<td>${e.id}</td>
-
-<td>${e.name}</td>
-
-<td>${e.username}</td>
-
-<td>${e.password}</td>
-
-<td>${e.role}</td>
-
-<td>${e.status}</td>
-
-
-</tr>
-
-`;
-
-
-});
-
-
+    let table = document.getElementById("employeeTable");
+    table.innerHTML="";
+    employees.forEach(e=>{
+        table.innerHTML+=`<tr><td>${e.id}</td><td>${e.name}</td><td>${e.username}</td><td>${e.password}</td><td>${e.role}</td><td>${e.status}</td></tr>`;
+    });
 }
-
-
-
-
-
-
 
 // SALES SYSTEM
-
-
-
 let memoList=[];
-
-
-
-function createMemoID(){
-
-
-return "BJ-"+Date.now();
-
-
-}
-
-
-
-
+function createMemoID(){ return "BJ-"+Date.now(); }
 
 function saveMemo(){
+    if(!customerName.value.trim() || !price.value){ alert("দয়া করে নাম ও মূল্য দিন"); return; }
+    let memo={
+        id:createMemoID(),
+        customer: customerName.value,
+        phone: customerPhone.value,
+        product: productName.value,
+        carat: carat.value,
+        weight: weight.value,
+        price: Number(price.value),
+        making: Number(making.value || 0),
+        advance: Number(advance.value || 0),
+        date: new Date().toLocaleString()
+    };
 
+    memo.total = memo.price + memo.making;
+    memo.due = memo.total - memo.advance;
 
-let memo={
-
-
-id:createMemoID(),
-
-
-customer:
-customerName.value,
-
-
-phone:
-customerPhone.value,
-
-
-product:
-productName.value,
-
-
-carat:
-carat.value,
-
-
-weight:
-weight.value,
-
-
-price:
-Number(price.value),
-
-
-making:
-Number(making.value),
-
-
-advance:
-Number(advance.value),
-
-
-date:
-new Date().toLocaleString()
-
-
-};
-
-
-
-memo.total=
-memo.price+memo.making;
-
-
-memo.due=
-memo.total-memo.advance;
-
-
-
-memoList.push(memo);
-
-
-
-localStorage.setItem(
-"BJ_MEMO",
-JSON.stringify(memoList)
-);
-
-
-
-showMemo();
-
-
-alert(
-"Memo Saved : "+memo.id
-);
-
-
-
+    memoList.push(memo);
+    localStorage.setItem("BJ_MEMO", JSON.stringify(memoList));
+    showMemo();
+    updateReport();
+    alert("Memo Saved : "+memo.id);
+    
+    customerName.value=''; customerPhone.value=''; productName.value='';
+    weight.value=''; price.value=''; making.value=''; advance.value='';
 }
 
-
-
-
-
 function showMemo(){
-
-
-let table=
-document.getElementById("memoTable");
-
-
-table.innerHTML="";
-
-
-
-memoList.forEach(m=>{
-
-
-table.innerHTML+=`
-
-<tr>
-
-<td>${m.id}</td>
-
-<td>${m.customer}</td>
-
-<td>৳${m.total}</td>
-
-<td>৳${m.due}</td>
-
-
-</tr>
-
-`;
-
-});
-
-
+    let table = document.getElementById("memoTable");
+    table.innerHTML="";
+    memoList.forEach(m=>{
+        table.innerHTML+=`<tr><td>${m.id}</td><td>${m.customer}</td><td>৳${m.total}</td><td>৳${m.due}</td></tr>`;
+    });
 }
 
 // PRINT MEMO
-
-
 function printLastMemo(){
-
-
-let m=
-memoList[memoList.length-1];
-
-
-if(!m){
-
-alert("No Memo Found");
-
-return;
-
+    let m = memoList[memoList.length-1];
+    if(!m){ alert("No Memo Found"); return; }
+    let win = window.open("");
+    win.document.write(`
+        <html><head><title>BJ Memo</title><style>
+        body{ font-family:Arial,sans-serif; padding:20px; color:#333; }
+        h1,h2{ text-align:center; color:#b8860b; margin:5px 0; }
+        table{ width:100%; border-collapse:collapse; margin-top:15px; }
+        td{ padding:8px; border-bottom:1px solid #ddd; }
+        .bold{ font-weight:bold; }
+        </style></head><body>
+        <h1>BJ</h1><h2>বাঁধন জুয়েলার্স</h2>
+        <center><p>প্রোপ্রাইটর: আনন্দ চন্দ্র পাল</p><p>01718-098540 | 01995-512450</p></center>
+        <hr>Memo No: ${m.id}<br>Date: ${m.date}<hr>
+        Customer: ${m.customer}<br>Phone: ${m.phone}<br>Product: ${m.product}<br>Gold: ${m.carat}<br>Weight: ${m.weight}<hr>
+        <table>
+            <tr><td>মূল্য</td><td>৳${m.price}</td></tr>
+            <tr><td>মজুরি</td><td>৳${m.making}</td></tr>
+            <tr class="bold"><td>মোট</td><td>৳${m.total}</td></tr>
+            <tr><td>অগ্রিম</td><td>৳${m.advance}</td></tr>
+            <tr class="bold" style="color:red;"><td>বাকি</td><td>৳${m.due}</td></tr>
+        </table>
+        <hr><small>শর্তাবলী: পরিবর্তনের ক্ষেত্রে ১০% এবং ফেরতের ক্ষেত্রে ২০% বাদ প্রযোজ্য।</small>
+        </body></html>
+    `);
+    win.document.close();
+    win.print();
 }
-
-
-
-let win=
-window.open("");
-
-
-
-win.document.write(`
-
-
-<html>
-
-<head>
-
-<title>BJ Memo</title>
-
-
-<style>
-
-body{
-
-font-family:Arial;
-padding:30px;
-
-}
-
-
-h1,h2{
-
-text-align:center;
-color:#b8860b;
-
-}
-
-
-table{
-
-width:100%;
-border-collapse:collapse;
-
-}
-
-
-td{
-
-padding:8px;
-border-bottom:1px solid #999;
-
-}
-
-</style>
-
-
-</head>
-
-
-<body>
-
-
-<h1>
-BJ
-</h1>
-
-
-<h2>
-বাঁধন জুয়েলার্স
-</h2>
-
-
-<center>
-
-<p>
-প্রোপ্রাইটর: আনন্দ চন্দ্র পাল
-</p>
-
-
-<p>
-01718-098540 | 01995-512450
-</p>
-
-
-</center>
-
-
-<hr>
-
-
-
-Memo No:
-${m.id}
-
-
-<br>
-
-
-Date:
-${m.date}
-
-
-
-<hr>
-
-
-Customer:
-${m.customer}
-
-
-<br>
-
-
-Phone:
-${m.phone}
-
-
-<br>
-
-
-Product:
-${m.product}
-
-
-<br>
-
-
-Gold:
-${m.carat}
-
-
-<br>
-
-
-Weight:
-${m.weight}
-
-
-
-<hr>
-
-
-
-<table>
-
-
-<tr>
-
-<td>
-মূল্য
-</td>
-
-<td>
-৳${m.price}
-</td>
-
-</tr>
-
-
-
-<tr>
-
-<td>
-মজুরি
-</td>
-
-<td>
-৳${m.making}
-</td>
-
-</tr>
-
-
-
-<tr>
-
-<td>
-মোট
-</td>
-
-<td>
-৳${m.total}
-</td>
-
-</tr>
-
-
-
-<tr>
-
-<td>
-অগ্রিম
-</td>
-
-<td>
-৳${m.advance}
-</td>
-
-</tr>
-
-
-
-<tr>
-
-<td>
-বাকি
-</td>
-
-<td>
-৳${m.due}
-</td>
-
-</tr>
-
-
-</table>
-
-
-
-<hr>
-
-
-শর্তাবলী:
-
-<br>
-
-পরিবর্তনের ক্ষেত্রে ১০% বাদ প্রযোজ্য।
-
-<br>
-
-ফেরতের ক্ষেত্রে ২০% বাদ প্রযোজ্য।
-
-
-
-</body>
-
-</html>
-
-
-`);
-
-
-win.print();
-
-
-}
-
-
-
-
-
-
 
 // MORTGAGE SYSTEM
-
 let mortgageList = JSON.parse(localStorage.getItem('mortgageList')) || [];
 
 function addMortgage() {
@@ -1610,50 +693,39 @@ function addMortgage() {
     mortgageList.push(m);
     localStorage.setItem('mortgageList', JSON.stringify(mortgageList));
 
-    customer.value = '';
-    phone.value = '';
-    gold.value = '';
-    amount.value = '';
+    customer.value = ''; phone.value = ''; gold.value = ''; amount.value = '';
     
     showMortgage();
-    if(typeof updateReport === 'function') updateReport(); 
+    updateReport(); 
     alert('বন্ধকি মাল সফলভাবে যোগ করা হয়েছে!');
 }
 
 function calculateProfit(amount, rate, dateStr) {
     const issueDate = new Date(dateStr);
     const today = new Date();
-    
     const diffTime = Math.abs(today - issueDate);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1; 
     
     let totalMonths = Math.floor(diffDays / 30);
     const remainingDays = diffDays % 30;
     
-    if (remainingDays > 7) {
-        totalMonths += 1;
-    }
-    
-    if (totalMonths === 0 && remainingDays > 7) {
-        totalMonths = 1;
-    }
+    if (remainingDays > 7) { totalMonths += 1; }
+    if (totalMonths === 0 && remainingDays > 7) { totalMonths = 1; }
     
     const monthlyProfit = (amount * rate) / 100;
     const totalProfit = monthlyProfit * totalMonths;
-    const totalPayable = amount + totalProfit;
     
     return {
         days: diffDays,
         months: totalMonths,
         profit: totalProfit,
-        total: totalPayable
+        total: amount + totalProfit
     };
 }
 
 function showMortgage() {
     const table = document.getElementById("mortgageTable");
     if (!table) return;
-    
     table.innerHTML = "";
 
     const activeMortgages = mortgageList.filter(m => m.status === 'ACTIVE' || !m.status);
@@ -1667,19 +739,19 @@ function showMortgage() {
         const calc = calculateProfit(m.amount, m.rate, m.date || new Date().toISOString());
         table.innerHTML += `
             <tr>
-                <td>${m.id}</td>
-                <td>
-                    <span style="color: #d4af37; font-weight: bold;">${m.name}</span><br>
-                    <small style="color: #888;">${m.gold || 'বিবরণ নেই'}</small>
+                <td style="color:#d4af37; font-weight:bold;">${m.id}</td>
+                <td style="text-align:left;">
+                    <span style="font-weight:bold;">${m.name}</span><br>
+                    <small style="color:#888;">${m.gold || 'বিবরণ নেই'}</small>
                 </td>
                 <td>৳${m.amount}</td>
                 <td>
                     ${m.rate} টাকা<br>
-                    <small style="color: #4ade80;">লাভ: ৳${calc.profit.toFixed(0)}</small>
+                    <small style="color:#4ade80; font-weight:bold;">+৳${calc.profit.toFixed(0)}</small>
                 </td>
                 <td>
                     <button onclick="releaseMortgage('${m.id}')" 
-                        style="padding: 6px 12px; background: #eab308; color: #000; font-size: 11px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; width: auto;">
+                        style="padding:6px 10px; background:#eab308; color:#000; font-size:11px; font-weight:bold; border-radius:6px; border:none; width:auto; margin:0;">
                         Release 🔓
                     </button>
                 </td>
@@ -1698,536 +770,115 @@ window.releaseMortgage = function(id) {
     const message = `--- 🔓 বাঁধন জুয়েলার্স (বন্ধকি রিলিজ) ---\n\n` +
                     `গ্রাহক: ${item.name}\n` +
                     `জমা রাখার তারিখ: ${formattedDate}\n` +
-                    `মোট সময়: ${calc.days} দিন (মাস: ${calc.months} মাস)\n` +
+                    `মোট সময়: ${calc.days} দিন (${calc.months} মাস)\n` +
                     `-----------------------------------------\n` +
                     `মূল টাকা: ৳${item.amount}\n` +
-                    `লাভের হার: ৳${item.rate} / ১০০ টাকা\n` +
                     `মোট লাভ: ৳${calc.profit.toFixed(2)}\n` +
                     `-----------------------------------------\n` +
-                    `মোট আদায়যোগ্য টাকা: ৳${calc.total.toFixed(2)}\n\n` +
-                    `আপনি কি টাকা বুঝে পেয়ে গহনাটি বুঝিয়ে দিয়েছেন?`;
+                    `মোট বিল: ৳${calc.total.toFixed(2)}\n\n` +
+                    `টাকা বুঝে পেয়ে গহনা রিলিজ করতে চাইলে OK চাপুন।`;
 
     if (confirm(message)) {
         item.status = 'RELEASED';
         localStorage.setItem('mortgageList', JSON.stringify(mortgageList));
         showMortgage(); 
-        if(typeof updateReport === 'function') updateReport(); 
+        updateReport(); 
         alert('সফলভাবে বন্ধকি মাল রিলিজ করা হয়েছে!');
     }
 }
 
-
-
-
-
-
-
 // STOCK SYSTEM
-
-
-
 let stockList=[];
-
-
-
 function addStock(){
-
-
-
-let s={
-
-
-name:
-stockName.value,
-
-
-weight:
-stockWeight.value,
-
-
-qty:
-Number(stockQty.value)
-
-
-};
-
-
-
-stockList.push(s);
-
-
-
-showStock();
-
-
-
-alert(
-"Stock Added"
-);
-
-
+    if(!stockName.value.trim()){ return; }
+    let s={ name: stockName.value, weight: stockWeight.value, qty: Number(stockQty.value || 0) };
+    stockList.push(s);
+    showStock();
+    alert("Stock Added");
+    stockName.value=''; stockWeight.value=''; stockQty.value='';
 }
-
-
-
 
 function showStock(){
-
-
-let table=
-document.getElementById("stockTable");
-
-
-table.innerHTML="";
-
-
-
-stockList.forEach(s=>{
-
-
-table.innerHTML+=`
-
-<tr>
-
-
-<td>${s.name}</td>
-
-
-<td>${s.weight}</td>
-
-
-<td>${s.qty}</td>
-
-
-</tr>
-
-
-`;
-
-
-});
-
-
+    let table = document.getElementById("stockTable");
+    table.innerHTML="";
+    stockList.forEach(s=>{
+        table.innerHTML+=`<tr><td>${s.name}</td><td>${s.weight}</td><td>${s.qty}</td></tr>`;
+    });
 }
-
-
-
-
-
-
 
 // CUSTOMER SYSTEM
-
-
-
 let customers=[];
-
-
-
 function addCustomer(){
-
-
-let c={
-
-
-name:
-cusName.value,
-
-
-phone:
-cusPhone.value,
-
-
-address:
-cusAddress.value
-
-
-};
-
-
-
-customers.push(c);
-
-
-
-showCustomers();
-
-
-alert(
-"Customer Saved"
-);
-
-
+    if(!cusName.value.trim()){ return; }
+    let c={ name: cusName.value, phone: cusPhone.value, address: cusAddress.value };
+    customers.push(c);
+    showCustomers();
+    alert("Customer Saved");
+    cusName.value=''; cusPhone.value=''; cusAddress.value='';
 }
 
-
-
-
-
 function showCustomers(){
-
-
-let table=
-document.getElementById("customerTable");
-
-
-table.innerHTML="";
-
-
-
-customers.forEach(c=>{
-
-
-table.innerHTML+=`
-
-<tr>
-
-
-<td>${c.name}</td>
-
-
-<td>${c.phone}</td>
-
-
-<td>${c.address}</td>
-
-
-</tr>
-
-
-`;
-
-
-});
-
-
+    let table = document.getElementById("customerTable");
+    table.innerHTML="";
+    customers.forEach(c=>{
+        table.innerHTML+=`<tr><td>${c.name}</td><td>${c.phone}</td><td>${c.address}</td></tr>`;
+    });
 }
 
 // REPORT SYSTEM
-
-
 function updateReport(){
+    let sales=0; let cash=0;
+    memoList.forEach(m=>{ sales += m.total; cash += m.advance; });
 
+    let activeCount = mortgageList.filter(m => m.status === 'ACTIVE' || !m.status).length;
 
-let sales=0;
+    document.getElementById("reportSales").innerHTML= "৳"+sales;
+    document.getElementById("reportCash").innerHTML= "৳"+cash;
+    document.getElementById("reportMortgage").innerHTML= activeCount;
+    document.getElementById("reportProfit").innerHTML= "৳"+(sales*0.05);
 
-
-let cash=0;
-
-
-
-memoList.forEach(m=>{
-
-
-sales += m.total;
-
-
-cash += m.advance;
-
-
-});
-
-
-
-document.getElementById("reportSales")
-.innerHTML=
-"৳"+sales;
-
-
-
-document.getElementById("reportCash")
-.innerHTML=
-"৳"+cash;
-
-
-
-document.getElementById("reportMortgage")
-.innerHTML=
-mortgageList.filter(m => m.status === 'ACTIVE' || !m.status).length;
-
-
-
-document.getElementById("reportProfit")
-.innerHTML=
-"৳"+(sales*0.05);
-
-
-
-document.getElementById("todaySale")
-.innerHTML=
-"৳"+sales;
-
-
-
-document.getElementById("cash")
-.innerHTML=
-"৳"+cash;
-
-
-
-document.getElementById("mortgageCount")
-.innerHTML=
-mortgageList.filter(m => m.status === 'ACTIVE' || !m.status).length;
-
-
-
-document.getElementById("profit")
-.innerHTML=
-"৳"+(sales*0.05);
-
-
+    document.getElementById("todaySale").innerHTML= "৳"+sales;
+    document.getElementById("cash").innerHTML= "৳"+cash;
+    document.getElementById("mortgageCount").innerHTML= activeCount;
+    document.getElementById("profit").innerHTML= "৳"+(sales*0.05);
 }
-
-
-
-
 
 // LOAD OLD MEMO
-
-
-let oldMemo=
-localStorage.getItem("BJ_MEMO");
-
-
-
-if(oldMemo){
-
-
-memoList=
-JSON.parse(oldMemo);
-
-
-}
-
-
-
-
-
-
+let oldMemo = localStorage.getItem("BJ_MEMO");
+if(oldMemo){ memoList = JSON.parse(oldMemo); }
 
 // BACKUP SYSTEM
-
-
-
 function createBackup(){
-
-
-let data={
-
-
-memo:memoList,
-
-employee:employees,
-
-mortgage:mortgageList,
-
-stock:stockList,
-
-customer:customers
-
-
-};
-
-
-
-localStorage.setItem(
-
-"BJ_BACKUP",
-
-JSON.stringify(data)
-
-);
-
-
-
-alert(
-"Backup Completed"
-);
-
-
-
+    let data={ memo:memoList, employee:employees, mortgage:mortgageList, stock:stockList, customer:customers };
+    localStorage.setItem("BJ_BACKUP", JSON.stringify(data));
+    alert("Backup Completed");
 }
-
-
-
-
 
 function restoreBackup(){
+    let data = localStorage.getItem("BJ_BACKUP");
+    if(data){
+        let backup = JSON.parse(data);
+        memoList = backup.memo || [];
+        employees = backup.employee || [];
+        mortgageList = backup.mortgage || [];
+        stockList = backup.stock || [];
+        customers = backup.customer || [];
 
-
-let data=
-localStorage.getItem("BJ_BACKUP");
-
-
-
-if(data){
-
-
-let backup=
-JSON.parse(data);
-
-
-
-memoList=
-backup.memo || [];
-
-
-employees=
-backup.employee || [];
-
-
-mortgageList=
-backup.mortgage || [];
-
-
-stockList=
-backup.stock || [];
-
-
-customers=
-backup.customer || [];
-
-
-
-showMemo();
-
-showEmployees();
-
-showMortgage();
-
-showStock();
-
-showCustomers();
-
-
-
-alert(
-"Backup Restored"
-);
-
-
-
+        showMemo(); showEmployees(); showMortgage(); showStock(); showCustomers(); updateReport();
+        alert("Backup Restored");
+    } else {
+        alert("No Backup Found");
+    }
 }
-
-else{
-
-
-alert(
-"No Backup Found"
-);
-
-
-}
-
-
-}
-
-
-
-
-
-
-// GOLD RATE SYSTEM
-
-
-
-let goldRate={};
-
-
-
-function saveGoldRate(){
-
-
-goldRate={
-
-
-22:
-document.getElementById("rate22").value,
-
-
-21:
-document.getElementById("rate21").value,
-
-
-18:
-document.getElementById("rate18").value
-
-
-};
-
-
-
-alert(
-"Gold Rate Updated"
-);
-
-
-}
-
-
-
-
-
-
-// PROFIT CALCULATOR
-
-
-
-function calculateProfitCalc(sale,cost){
-
-
-return sale-cost;
-
-
-}
-
-
-
-
-
-// DUE CALCULATOR
-
-
-
-function calculateDue(total,paid){
-
-
-return total-paid;
-
-
-}
-
-
-
-
-
 
 // START PAGE
-
-
 window.onload=function(){
-
-
-showPage("dashboard");
-
-showMortgage();
-
-updateReport();
-
-
+    showPage("dashboard");
+    showMemo();
+    showMortgage();
+    updateReport();
 }
 
-
-
 </script>
-
-
-</div>
-
-
-</div>
-
-
 </body>
-
 </html>
