@@ -374,6 +374,7 @@ background: #161616;
                                 <th>Password</th>
                                 <th>Role</th>
                                 <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="employeeTable"></tbody>
@@ -589,8 +590,29 @@ function showEmployees(){
     let table = document.getElementById("employeeTable");
     table.innerHTML="";
     employees.forEach(e=>{
-        table.innerHTML+=`<tr><td>${e.id}</td><td>${e.name}</td><td>${e.username}</td><td>${e.password}</td><td>${e.role}</td><td>${e.status}</td></tr>`;
+        table.innerHTML+=`
+            <tr>
+                <td>${e.id}</td>
+                <td>${e.name}</td>
+                <td>${e.username}</td>
+                <td>${e.password}</td>
+                <td>${e.role}</td>
+                <td>${e.status}</td>
+                <td>
+                    <button onclick="deleteEmployee('${e.id}')" 
+                        style="padding: 6px 12px; background: #ef4444; color: white; font-size: 11px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; width: auto; margin: 0;">
+                        Delete 🗑️
+                    </button>
+                </td>
+            </tr>`;
     });
+}
+
+function deleteEmployee(id) {
+    if (confirm("আপনি কি নিশ্চিতভাবে এই কর্মচারীকে তালিকা থেকে বাদ দিতে চান?")) {
+        employees = employees.filter(e => e.id !== id);
+        showEmployees();
+    }
 }
 
 // SALES SYSTEM
