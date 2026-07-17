@@ -1,0 +1,2206 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>বাঁধন জুয়েলার্স Management System</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Noto Sans Bengali",Arial,sans-serif;
+}
+
+body{
+background:#050505;
+color:white;
+min-height:100vh;
+}
+
+
+/* GOLD BACKGROUND */
+
+body:before{
+
+content:"";
+position:fixed;
+width:500px;
+height:500px;
+background:#d4af37;
+opacity:.15;
+filter:blur(100px);
+animation:move 8s infinite alternate;
+
+}
+
+@keyframes move{
+
+from{
+transform:translate(0,0);
+}
+
+to{
+transform:translate(500px,300px);
+}
+
+}
+
+
+/* LOGIN */
+
+.login{
+
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+
+}
+
+
+.login-box{
+
+width:360px;
+background:#111;
+padding:35px;
+border-radius:25px;
+border:1px solid #d4af37;
+box-shadow:0 0 30px #d4af37;
+text-align:center;
+
+}
+
+
+.logo{
+
+width:100px;
+height:100px;
+border-radius:50%;
+border:3px solid #d4af37;
+margin:auto;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:45px;
+font-weight:bold;
+color:#d4af37;
+
+}
+
+
+h1{
+
+color:#d4af37;
+margin:20px 0;
+
+}
+
+
+input,select{
+
+width:100%;
+padding:14px;
+margin:8px 0;
+background:#222;
+border:none;
+border-radius:10px;
+color:white;
+
+}
+
+
+button{
+
+width:100%;
+padding:14px;
+background:#d4af37;
+border:none;
+border-radius:10px;
+font-weight:bold;
+cursor:pointer;
+
+}
+
+
+button:hover{
+
+background:white;
+
+}
+
+
+/* SYSTEM */
+
+
+#system{
+
+display:none;
+
+}
+
+
+.sidebar{
+
+position:fixed;
+width:230px;
+height:100vh;
+background:#111;
+border-right:1px solid #d4af37;
+padding:20px;
+
+}
+
+
+.sidebar h2{
+
+text-align:center;
+color:#d4af37;
+
+}
+
+
+.menu div{
+
+background:#222;
+padding:14px;
+margin:8px 0;
+border-radius:10px;
+cursor:pointer;
+
+}
+
+
+.menu div:hover{
+
+background:#d4af37;
+color:black;
+
+}
+
+
+.main{
+
+margin-left:230px;
+padding:30px;
+
+}
+
+
+.card{
+
+background:#111;
+border:1px solid #d4af37;
+border-radius:20px;
+padding:25px;
+margin-bottom:20px;
+
+}
+
+
+.cards{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+
+}
+
+
+.number{
+
+font-size:35px;
+color:white;
+margin-top:15px;
+
+}
+
+
+.section{
+
+display:none;
+
+}
+
+
+.gold{
+
+color:#d4af37;
+
+}
+
+
+table{
+
+border-collapse:collapse;
+
+}
+
+
+th{
+
+color:#d4af37;
+
+}
+
+
+td,th{
+
+padding:10px;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- LOGIN -->
+
+
+<div class="login" id="login">
+
+
+<div class="login-box">
+
+
+<div class="logo">
+BJ
+</div>
+
+
+<h1>
+বাঁধন জুয়েলার্স
+</h1>
+
+
+<p>
+Management System
+</p>
+
+
+<input id="username" placeholder="Username">
+
+
+<input id="password" type="password" placeholder="Password">
+
+
+<button onclick="loginUser()">
+Login
+</button>
+
+
+</div>
+
+
+</div>
+
+
+
+<!-- SYSTEM -->
+
+
+<div id="system">
+
+
+<div class="sidebar">
+
+
+<h2>
+BJ
+</h2>
+
+
+<div class="menu">
+
+
+<div onclick="showPage('dashboard')">
+🏠 Dashboard
+</div>
+
+
+<div onclick="showPage('employee')">
+👥 Employee
+</div>
+
+
+<div onclick="showPage('sales')">
+🛒 Sales Memo
+</div>
+
+
+<div onclick="showPage('mortgage')">
+💰 Mortgage
+</div>
+
+
+<div onclick="showPage('stock')">
+📦 Stock
+</div>
+
+
+<div onclick="showPage('customer')">
+👤 Customer
+</div>
+
+
+<div onclick="showPage('report')">
+📊 Report
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="main">
+
+
+
+<!-- DASHBOARD -->
+
+
+<div id="dashboard" class="section">
+
+
+<h1 class="gold">
+Admin Dashboard
+</h1>
+
+
+<div class="cards">
+
+
+<div class="card">
+
+<h3>
+আজকের বিক্রি
+</h3>
+
+<div class="number" id="todaySale">
+৳0
+</div>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>
+Cash
+</h3>
+
+<div class="number" id="cash">
+৳0
+</div>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>
+Mortgage
+</h3>
+
+<div class="number" id="mortgageCount">
+0
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Profit
+</h3>
+
+<div class="number" id="profit">
+৳0
+</div>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+<!-- EMPLOYEE MANAGEMENT -->
+
+<div id="employee" class="section">
+
+
+<h1 class="gold">
+Employee Management
+</h1>
+
+
+<div class="card">
+
+
+<h3>
+নতুন কর্মচারী যোগ করুন
+</h3>
+
+
+<input id="empName" placeholder="নাম">
+
+
+<input id="empPhone" placeholder="মোবাইল">
+
+
+<input id="empNid" placeholder="NID">
+
+
+<select id="empRole">
+
+<option>
+Manager
+</option>
+
+<option>
+Staff
+</option>
+
+</select>
+
+
+<button onclick="addEmployee()">
+Create Employee
+</button>
+
+
+</div>
+
+
+
+<div class="card">
+
+
+<h3>
+Employee List
+</h3>
+
+
+<table width="100%" border="1">
+
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Name</th>
+<th>Username</th>
+<th>Password</th>
+<th>Role</th>
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="employeeTable">
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- SALES SECTION -->
+
+
+<div id="sales" class="section">
+
+
+<h1 class="gold">
+Cash Memo / Sales
+</h1>
+
+
+
+<div class="card">
+
+
+<input id="customerName" placeholder="Customer Name">
+
+
+<input id="customerPhone" placeholder="Phone Number">
+
+
+<input id="productName" placeholder="Product Name">
+
+
+<select id="carat">
+
+<option>
+22K (91.60%)
+</option>
+
+<option>
+21K (87.50%)
+</option>
+
+<option>
+18K (75%)
+</option>
+
+
+</select>
+
+
+<input id="weight" placeholder="Weight">
+
+
+<input id="price" type="number" placeholder="Gold Price">
+
+
+<input id="making" type="number" placeholder="Making Charge">
+
+
+<input id="advance" type="number" placeholder="Advance">
+
+
+<button onclick="saveMemo()">
+
+Save Memo
+
+</button>
+
+
+<button onclick="printLastMemo()">
+
+Print Memo
+
+</button>
+
+
+</div>
+
+
+
+<div class="card">
+
+
+<h3>
+Memo History
+</h3>
+
+
+<table width="100%" border="1">
+
+
+<thead>
+
+<tr>
+
+<th>Memo</th>
+<th>Customer</th>
+<th>Total</th>
+<th>Due</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="memoTable">
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- MORTGAGE -->
+
+
+<div id="mortgage" class="section">
+
+
+<h1 class="gold">
+বন্ধকি মাল Management
+</h1>
+
+
+
+<div class="card">
+
+
+<input id="mCustomer" placeholder="Customer Name">
+
+
+<input id="mPhone" placeholder="Phone">
+
+
+<input id="mGold" placeholder="Gold Details">
+
+
+<input id="mAmount" type="number" placeholder="Amount">
+
+
+
+<select id="mRate">
+
+
+<option value="3">
+৩ টাকা / ১০০
+</option>
+
+
+<option value="4">
+৪ টাকা / ১০০
+</option>
+
+
+<option value="5">
+৫ টাকা / ১০০
+</option>
+
+
+</select>
+
+
+<button onclick="addMortgage()">
+
+Save Mortgage
+
+</button>
+
+
+</div>
+
+
+
+<div class="card">
+
+
+<table width="100%" border="1">
+
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Name</th>
+<th>Amount</th>
+<th>Rate</th>
+
+</tr>
+
+
+</thead>
+
+
+<tbody id="mortgageTable">
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- STOCK -->
+
+
+<div id="stock" class="section">
+
+
+<h1 class="gold">
+Gold Inventory
+</h1>
+
+
+<div class="card">
+
+
+<input id="stockName" placeholder="Gold Item">
+
+
+<input id="stockWeight" placeholder="Weight">
+
+
+<input id="stockQty" type="number" placeholder="Quantity">
+
+
+<button onclick="addStock()">
+
+Add Stock
+
+</button>
+
+
+</div>
+
+
+
+<div class="card">
+
+
+<table width="100%" border="1">
+
+
+<thead>
+
+<tr>
+
+<th>Item</th>
+<th>Weight</th>
+<th>Qty</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="stockTable">
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+
+</div>
+
+<!-- CUSTOMER DATABASE -->
+
+<div id="customer" class="section">
+
+
+<h1 class="gold">
+Customer Database
+</h1>
+
+
+<div class="card">
+
+
+<input id="cusName" placeholder="Customer Name">
+
+
+<input id="cusPhone" placeholder="Phone Number">
+
+
+<input id="cusAddress" placeholder="Address">
+
+
+<button onclick="addCustomer()">
+
+Save Customer
+
+</button>
+
+
+</div>
+
+
+
+<div class="card">
+
+
+<table width="100%" border="1">
+
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+<th>Phone</th>
+<th>Address</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="customerTable">
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- REPORT -->
+
+
+<div id="report" class="section">
+
+
+<h1 class="gold">
+Reports
+</h1>
+
+
+<div class="cards">
+
+
+<div class="card">
+
+<h3>
+Total Sales
+</h3>
+
+<div class="number" id="reportSales">
+৳0
+</div>
+
+
+</div>
+
+
+
+<div class="card">
+
+<h3>
+Total Cash
+</h3>
+
+<div class="number" id="reportCash">
+৳0
+</div>
+
+
+</div>
+
+
+
+<div class="card">
+
+<h3>
+Total Mortgage
+</h3>
+
+<div class="number" id="reportMortgage">
+0
+</div>
+
+
+</div>
+
+
+
+<div class="card">
+
+<h3>
+Profit
+</h3>
+
+<div class="number" id="reportProfit">
+৳0
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<script>
+
+
+// LOGIN
+
+
+function loginUser(){
+
+
+let u=
+document.getElementById("username").value;
+
+
+let p=
+document.getElementById("password").value;
+
+
+
+if(u=="admin" && p=="1234"){
+
+
+document.getElementById("login").style.display="none";
+
+
+document.getElementById("system").style.display="block";
+
+
+showPage("dashboard");
+
+
+}
+
+else{
+
+
+alert("Wrong Login");
+
+
+}
+
+
+}
+
+
+
+
+
+// PAGE OPEN
+
+
+function showPage(page){
+
+
+let sections=
+document.querySelectorAll(".section");
+
+
+sections.forEach(s=>{
+
+s.style.display="none";
+
+});
+
+
+document.getElementById(page).style.display="block";
+
+
+}
+
+
+
+
+
+// EMPLOYEE SYSTEM
+
+
+let employees=[];
+
+
+let empID=0;
+
+
+
+function addEmployee(){
+
+
+empID++;
+
+
+let name=
+empName.value;
+
+
+let phone=
+empPhone.value;
+
+
+let user=
+name.toLowerCase()
++
+phone.slice(-4);
+
+
+
+let pass=
+"BJ#"
++
+phone.slice(-4);
+
+
+
+let data={
+
+id:"EMP-"+empID,
+
+name:name,
+
+username:user,
+
+password:pass,
+
+role:empRole.value,
+
+status:"Active"
+
+};
+
+
+
+employees.push(data);
+
+
+showEmployees();
+
+
+
+alert(
+"Employee Created\nUsername: "
++user+
+"\nPassword: "
++pass
+);
+
+
+
+}
+
+
+
+
+function showEmployees(){
+
+
+let table=
+document.getElementById("employeeTable");
+
+
+table.innerHTML="";
+
+
+
+employees.forEach(e=>{
+
+
+table.innerHTML+=`
+
+<tr>
+
+<td>${e.id}</td>
+
+<td>${e.name}</td>
+
+<td>${e.username}</td>
+
+<td>${e.password}</td>
+
+<td>${e.role}</td>
+
+<td>${e.status}</td>
+
+
+</tr>
+
+`;
+
+
+});
+
+
+}
+
+
+
+
+
+
+
+// SALES SYSTEM
+
+
+
+let memoList=[];
+
+
+
+function createMemoID(){
+
+
+return "BJ-"+Date.now();
+
+
+}
+
+
+
+
+
+function saveMemo(){
+
+
+let memo={
+
+
+id:createMemoID(),
+
+
+customer:
+customerName.value,
+
+
+phone:
+customerPhone.value,
+
+
+product:
+productName.value,
+
+
+carat:
+carat.value,
+
+
+weight:
+weight.value,
+
+
+price:
+Number(price.value),
+
+
+making:
+Number(making.value),
+
+
+advance:
+Number(advance.value),
+
+
+date:
+new Date().toLocaleString()
+
+
+};
+
+
+
+memo.total=
+memo.price+memo.making;
+
+
+memo.due=
+memo.total-memo.advance;
+
+
+
+memoList.push(memo);
+
+
+
+localStorage.setItem(
+"BJ_MEMO",
+JSON.stringify(memoList)
+);
+
+
+
+showMemo();
+
+
+alert(
+"Memo Saved : "+memo.id
+);
+
+
+
+}
+
+
+
+
+
+function showMemo(){
+
+
+let table=
+document.getElementById("memoTable");
+
+
+table.innerHTML="";
+
+
+
+memoList.forEach(m=>{
+
+
+table.innerHTML+=`
+
+<tr>
+
+<td>${m.id}</td>
+
+<td>${m.customer}</td>
+
+<td>৳${m.total}</td>
+
+<td>৳${m.due}</td>
+
+
+</tr>
+
+`;
+
+});
+
+
+}
+
+// PRINT MEMO
+
+
+function printLastMemo(){
+
+
+let m=
+memoList[memoList.length-1];
+
+
+if(!m){
+
+alert("No Memo Found");
+
+return;
+
+}
+
+
+
+let win=
+window.open("");
+
+
+
+win.document.write(`
+
+
+<html>
+
+<head>
+
+<title>BJ Memo</title>
+
+
+<style>
+
+body{
+
+font-family:Arial;
+padding:30px;
+
+}
+
+
+h1,h2{
+
+text-align:center;
+color:#b8860b;
+
+}
+
+
+table{
+
+width:100%;
+border-collapse:collapse;
+
+}
+
+
+td{
+
+padding:8px;
+border-bottom:1px solid #999;
+
+}
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<h1>
+BJ
+</h1>
+
+
+<h2>
+বাঁধন জুয়েলার্স
+</h2>
+
+
+<center>
+
+<p>
+প্রোপ্রাইটর: আনন্দ চন্দ্র পাল
+</p>
+
+
+<p>
+01718-098540 | 01995-512450
+</p>
+
+
+</center>
+
+
+<hr>
+
+
+
+Memo No:
+${m.id}
+
+
+<br>
+
+
+Date:
+${m.date}
+
+
+
+<hr>
+
+
+Customer:
+${m.customer}
+
+
+<br>
+
+
+Phone:
+${m.phone}
+
+
+<br>
+
+
+Product:
+${m.product}
+
+
+<br>
+
+
+Gold:
+${m.carat}
+
+
+<br>
+
+
+Weight:
+${m.weight}
+
+
+
+<hr>
+
+
+
+<table>
+
+
+<tr>
+
+<td>
+মূল্য
+</td>
+
+<td>
+৳${m.price}
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td>
+মজুরি
+</td>
+
+<td>
+৳${m.making}
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td>
+মোট
+</td>
+
+<td>
+৳${m.total}
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td>
+অগ্রিম
+</td>
+
+<td>
+৳${m.advance}
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td>
+বাকি
+</td>
+
+<td>
+৳${m.due}
+</td>
+
+</tr>
+
+
+</table>
+
+
+
+<hr>
+
+
+শর্তাবলী:
+
+<br>
+
+পরিবর্তনের ক্ষেত্রে ১০% বাদ প্রযোজ্য।
+
+<br>
+
+ফেরতের ক্ষেত্রে ২০% বাদ প্রযোজ্য।
+
+
+
+</body>
+
+</html>
+
+
+`);
+
+
+win.print();
+
+
+}
+
+
+
+
+
+
+
+// MORTGAGE SYSTEM
+
+
+
+let mortgageList=[];
+
+
+
+function addMortgage(){
+
+
+
+let m={
+
+
+id:
+"M-"+(mortgageList.length+1),
+
+
+name:
+mCustomer.value,
+
+
+phone:
+mPhone.value,
+
+
+gold:
+mGold.value,
+
+
+amount:
+Number(mAmount.value),
+
+
+rate:
+Number(mRate.value),
+
+
+date:
+new Date().toLocaleDateString()
+
+
+};
+
+
+
+mortgageList.push(m);
+
+
+
+showMortgage();
+
+
+alert(
+"Mortgage Saved"
+);
+
+
+}
+
+
+
+
+
+function showMortgage(){
+
+
+let table=
+document.getElementById("mortgageTable");
+
+
+table.innerHTML="";
+
+
+
+mortgageList.forEach(m=>{
+
+
+table.innerHTML+=`
+
+<tr>
+
+
+<td>${m.id}</td>
+
+
+<td>${m.name}</td>
+
+
+<td>
+৳${m.amount}
+</td>
+
+
+<td>
+${m.rate}
+ টাকা
+</td>
+
+
+
+</tr>
+
+`;
+
+
+});
+
+
+}
+
+
+
+
+
+
+
+// STOCK SYSTEM
+
+
+
+let stockList=[];
+
+
+
+function addStock(){
+
+
+
+let s={
+
+
+name:
+stockName.value,
+
+
+weight:
+stockWeight.value,
+
+
+qty:
+Number(stockQty.value)
+
+
+};
+
+
+
+stockList.push(s);
+
+
+
+showStock();
+
+
+
+alert(
+"Stock Added"
+);
+
+
+}
+
+
+
+
+function showStock(){
+
+
+let table=
+document.getElementById("stockTable");
+
+
+table.innerHTML="";
+
+
+
+stockList.forEach(s=>{
+
+
+table.innerHTML+=`
+
+<tr>
+
+
+<td>${s.name}</td>
+
+
+<td>${s.weight}</td>
+
+
+<td>${s.qty}</td>
+
+
+</tr>
+
+`;
+
+
+});
+
+
+}
+
+
+
+
+
+
+
+// CUSTOMER SYSTEM
+
+
+
+let customers=[];
+
+
+
+function addCustomer(){
+
+
+let c={
+
+
+name:
+cusName.value,
+
+
+phone:
+cusPhone.value,
+
+
+address:
+cusAddress.value
+
+
+};
+
+
+
+customers.push(c);
+
+
+
+showCustomers();
+
+
+alert(
+"Customer Saved"
+);
+
+
+}
+
+
+
+
+
+function showCustomers(){
+
+
+let table=
+document.getElementById("customerTable");
+
+
+table.innerHTML="";
+
+
+
+customers.forEach(c=>{
+
+
+table.innerHTML+=`
+
+<tr>
+
+
+<td>${c.name}</td>
+
+
+<td>${c.phone}</td>
+
+
+<td>${c.address}</td>
+
+
+</tr>
+
+
+`;
+
+
+});
+
+
+}
+
+// REPORT SYSTEM
+
+
+function updateReport(){
+
+
+let sales=0;
+
+
+let cash=0;
+
+
+
+memoList.forEach(m=>{
+
+
+sales += m.total;
+
+
+cash += m.advance;
+
+
+});
+
+
+
+document.getElementById("reportSales")
+.innerHTML=
+"৳"+sales;
+
+
+
+document.getElementById("reportCash")
+.innerHTML=
+"৳"+cash;
+
+
+
+document.getElementById("reportMortgage")
+.innerHTML=
+mortgageList.length;
+
+
+
+document.getElementById("reportProfit")
+.innerHTML=
+"৳"+(sales*0.05);
+
+
+
+document.getElementById("todaySale")
+.innerHTML=
+"৳"+sales;
+
+
+
+document.getElementById("cash")
+.innerHTML=
+"৳"+cash;
+
+
+
+document.getElementById("mortgageCount")
+.innerHTML=
+mortgageList.length;
+
+
+
+document.getElementById("profit")
+.innerHTML=
+"৳"+(sales*0.05);
+
+
+}
+
+
+
+
+
+// LOAD OLD MEMO
+
+
+let oldMemo=
+localStorage.getItem("BJ_MEMO");
+
+
+
+if(oldMemo){
+
+
+memoList=
+JSON.parse(oldMemo);
+
+
+}
+
+
+
+
+
+
+
+// BACKUP SYSTEM
+
+
+
+function createBackup(){
+
+
+let data={
+
+
+memo:memoList,
+
+employee:employees,
+
+mortgage:mortgageList,
+
+stock:stockList,
+
+customer:customers
+
+
+};
+
+
+
+localStorage.setItem(
+
+"BJ_BACKUP",
+
+JSON.stringify(data)
+
+);
+
+
+
+alert(
+"Backup Completed"
+);
+
+
+
+}
+
+
+
+
+
+function restoreBackup(){
+
+
+let data=
+localStorage.getItem("BJ_BACKUP");
+
+
+
+if(data){
+
+
+let backup=
+JSON.parse(data);
+
+
+
+memoList=
+backup.memo || [];
+
+
+employees=
+backup.employee || [];
+
+
+mortgageList=
+backup.mortgage || [];
+
+
+stockList=
+backup.stock || [];
+
+
+customers=
+backup.customer || [];
+
+
+
+showMemo();
+
+showEmployees();
+
+showMortgage();
+
+showStock();
+
+showCustomers();
+
+
+
+alert(
+"Backup Restored"
+);
+
+
+
+}
+
+else{
+
+
+alert(
+"No Backup Found"
+);
+
+
+}
+
+
+}
+
+
+
+
+
+
+// GOLD RATE SYSTEM
+
+
+
+let goldRate={};
+
+
+
+function saveGoldRate(){
+
+
+goldRate={
+
+
+22:
+document.getElementById("rate22").value,
+
+
+21:
+document.getElementById("rate21").value,
+
+
+18:
+document.getElementById("rate18").value
+
+
+};
+
+
+
+alert(
+"Gold Rate Updated"
+);
+
+
+}
+
+
+
+
+
+
+// PROFIT CALCULATOR
+
+
+
+function calculateProfit(sale,cost){
+
+
+return sale-cost;
+
+
+}
+
+
+
+
+
+// DUE CALCULATOR
+
+
+
+function calculateDue(total,paid){
+
+
+return total-paid;
+
+
+}
+
+
+
+
+
+
+// START PAGE
+
+
+window.onload=function(){
+
+
+showPage("dashboard");
+
+
+updateReport();
+
+
+}
+
+
+
+</script>
+
+
+</div>
+
+
+</div>
+
+
+</body>
+
+</html>
