@@ -1583,68 +1583,138 @@ win.print();
 
 
 
-let mortgageList=[];
+let mortgageList = JSON.parse(localStorage.getItem('mortgageList')) || [];
 
+function addMortgage() {
+    const customer = document.getElementById('mCustomer');
+    const phone = document.getElementById('mPhone');
+    const gold = document.getElementById('mGold');
+    const amount = document.getElementById('mAmount');
+    const rate = document.getElementById('mRate');
 
+    if (!customer.value.trim() || !amount.value) {
+        alert('দয়া করে নাম এবং টাকার পরিমাণ সঠিকভাবে দিন!');
+        return;
+    }
 
-function addMortgage(){
+    let m = {
+        id: "M-" + (mortgageList.length + 1),
+        name: customer.value,
+        phone: phone.value,
+        gold: gold.value,
+        amount: Number(amount.value),
+        rate: Number(rate.value),
+        date: new Date().toISOString(), 
+        status: 'ACTIVE'
+    };
 
+    mortgageList.push(m);
+    localStorage.setItem('mortgageList', JSON.stringify(mortgageList));
 
-
-let m={
-
-
-id:
-"M-"+(mortgageList.length+1),
-
-
-name:
-mCustomer.value,
-
-
-phone:
-mPhone.value,
-
-
-gold:
-mGold.value,
-
-
-amount:
-Number(mAmount.value),
-
-
-rate:
-Number(mRate.value),
-
-
-date:
-new Date().toLocaleDateString()
-
-
-};
-
-
-
-mortgageList.push(m);
-
-
-
-showMortgage();
-
-
-alert(
-"Mortgage Saved"
-);
-
-
+    customer.value = '';
+    phone.value = '';
+    gold.value = '';
+    amount.value = '';
+    
+    renderMortgageTable();
+    alert('বন্ধকি মাল সফলভাবে যোগ করা হয়েছে!');
 }
 
+function calculateProfit(amount, rate, dateStr) {
+    const issueDate = new Date(dateStr);
+    const today = new Date();
+    
+    const diffTime = Math.abs(today - issueDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1; 
+    
+    let totalMonths = Math.floor(diffDays / 30);
+    const remainingDays = diffDays % 30;
+    
+    if (remainingDays > 7) {
+        totalMonths += 1;
+    }
+    
+    if (totalMonths === 0 && remainingDays > 7) {
+        totalMonths = 1;
+    }
+    
+    const monthlyProfit = (amount * rate) / 100;
+    const totalProfit = monthlyProfit * totalMonths;
+    const totalPayable = amount + totalProfit;
+    
+    return {
+        days: diffDays,
+        months: totalMonths,
+        profit: totalProfit,
+        total: totalPayable
+    };
+}
 
+function renderMortgageTable() {
+    const tbody = document.getElementById('mortgageTableBody') || document.querySelector('#mortgage tbody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = ''; 
 
+    const activeMortgages = mortgageList.filter(m => m.status === 'ACTIVE');
 
+    if (activeMortgages.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-zinc-500">কোনো সক্রিয় বন্ধক পাওয়া যায়নি।</td></tr>`;
+        return;
+    }
 
-function showMortgage(){
+    activeMortgages.forEach(m => {
+        const calc = calculateProfit(m.amount, m.rate, m.date);
+        const formattedDate = new Date(m.date).toLocaleDateString('bn-BD'); 
+
+        const row = document.createElement('tr');
+        row.className = "border-b border-zinc-800 hover:bg-zinc-900/50 transition text-center";
+        row.innerHTML = `
+            <td class="p-3 font-semibold text-amber-500">${m.id}</td>
+            <td class="p-3 text-zinc-300 text-left">${m.name}</td>
+            <td class="p-3 text-zinc-300">৳${m.amount}</td>
+            <td class="p-3 text-zinc-300">${m.rate} টাকা</td>
+            <td class="p-3 text-zinc-400 text-sm">${formattedDate}</td>
+            <td class="p-3 text-emerald-400 font-bold">৳${calc.profit.toFixed(2)}</td>
+            <td class="p-3">
+                <button onclick="releaseMortgage('${m.id}')" 
+                    class="px-3 py-1 bg-amber-500 hover:bg-amber-600 text-zinc-950 text-xs font-bold rounded shadow transition duration-200 cursor-pointer">
+                    Release 🔓
+                </button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+window.releaseMortgage = function(id) {
+    const item = mortgageList.find(m => m.id === id);
+    if (!item) return;
+
+    const calc = calculateProfit(item.amount, item.rate, item.date);
+    const formattedDate = new Date(item.date).toLocaleDateString('bn-BD');
+
+    const message = `--- 🔓 বাঁধন জুয়েলার্স (বন্ধকি রিলিজ) ---\n\n` +
+                    `গ্রাহক: ${item.name}\n` +
+                    `জমা রাখার তারিখ: ${formattedDate}\n` +
+                    `মোট সময়: ${calc.days} দিন (হিসাবকৃত মাস: ${calc.months} মাস)\n` +
+                    `-----------------------------------------\n` +
+                    `মূল টাকা: ৳${item.amount}\n` +
+                    `লাভের হার: ৳${item.rate} / ১০০ টাকা\n` +
+                    `মোট লাভ: ৳${calc.profit.toFixed(2)}\n` +
+                    `-----------------------------------------\n` +
+                    `মোট আদায়যোগ্য টাকা: ৳${calc.total.toFixed(2)}\n\n` +
+                    `আপনি কি টাকা বুঝে পেয়ে গহনাটি বুঝিয়ে দিয়েছেন?`;
+
+    if (confirm(message)) {
+        item.status = 'RELEASED';
+        localStorage.setItem('mortgageList', JSON.stringify(mortgageList));
+        renderMortgageTable(); 
+        alert('সফলভাবে বন্ধকি মাল রিলিজ করা হয়েছে!');
+    }
+}
+
+renderMortgageTable();function showMortgage(){
 
 
 let table=
