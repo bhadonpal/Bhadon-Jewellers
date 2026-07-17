@@ -722,6 +722,7 @@ Save Mortgage
 <th>Name</th>
 <th>Amount</th>
 <th>Rate</th>
+<th>Status / Release</th>
 
 </tr>
 
@@ -992,7 +993,7 @@ document.getElementById("password").value;
 
 
 
-if(u=="admin" && p=="1234"){
+if(u=="Bhadon" && p=="4311"){
 
 
 document.getElementById("login").style.display="none";
@@ -1581,8 +1582,6 @@ win.print();
 
 // MORTGAGE SYSTEM
 
-
-
 let mortgageList = JSON.parse(localStorage.getItem('mortgageList')) || [];
 
 function addMortgage() {
@@ -1616,7 +1615,8 @@ function addMortgage() {
     gold.value = '';
     amount.value = '';
     
-    renderMortgageTable();
+    showMortgage();
+    if(typeof updateReport === 'function') updateReport(); 
     alert('বন্ধকি মাল সফলভাবে যোগ করা হয়েছে!');
 }
 
@@ -1650,40 +1650,41 @@ function calculateProfit(amount, rate, dateStr) {
     };
 }
 
-function renderMortgageTable() {
-    const tbody = document.getElementById('mortgageTableBody') || document.querySelector('#mortgage tbody');
-    if (!tbody) return;
+function showMortgage() {
+    const table = document.getElementById("mortgageTable");
+    if (!table) return;
     
-    tbody.innerHTML = ''; 
+    table.innerHTML = "";
 
-    const activeMortgages = mortgageList.filter(m => m.status === 'ACTIVE');
+    const activeMortgages = mortgageList.filter(m => m.status === 'ACTIVE' || !m.status);
 
     if (activeMortgages.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-zinc-500">কোনো সক্রিয় বন্ধক পাওয়া যায়নি।</td></tr>`;
+        table.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#999; padding:20px;">কোনো সক্রিয় বন্ধক পাওয়া যায়নি।</td></tr>`;
         return;
     }
 
     activeMortgages.forEach(m => {
-        const calc = calculateProfit(m.amount, m.rate, m.date);
-        const formattedDate = new Date(m.date).toLocaleDateString('bn-BD'); 
-
-        const row = document.createElement('tr');
-        row.className = "border-b border-zinc-800 hover:bg-zinc-900/50 transition text-center";
-        row.innerHTML = `
-            <td class="p-3 font-semibold text-amber-500">${m.id}</td>
-            <td class="p-3 text-zinc-300 text-left">${m.name}</td>
-            <td class="p-3 text-zinc-300">৳${m.amount}</td>
-            <td class="p-3 text-zinc-300">${m.rate} টাকা</td>
-            <td class="p-3 text-zinc-400 text-sm">${formattedDate}</td>
-            <td class="p-3 text-emerald-400 font-bold">৳${calc.profit.toFixed(2)}</td>
-            <td class="p-3">
-                <button onclick="releaseMortgage('${m.id}')" 
-                    class="px-3 py-1 bg-amber-500 hover:bg-amber-600 text-zinc-950 text-xs font-bold rounded shadow transition duration-200 cursor-pointer">
-                    Release 🔓
-                </button>
-            </td>
+        const calc = calculateProfit(m.amount, m.rate, m.date || new Date().toISOString());
+        table.innerHTML += `
+            <tr>
+                <td>${m.id}</td>
+                <td>
+                    <span style="color: #d4af37; font-weight: bold;">${m.name}</span><br>
+                    <small style="color: #888;">${m.gold || 'বিবরণ নেই'}</small>
+                </td>
+                <td>৳${m.amount}</td>
+                <td>
+                    ${m.rate} টাকা<br>
+                    <small style="color: #4ade80;">লাভ: ৳${calc.profit.toFixed(0)}</small>
+                </td>
+                <td>
+                    <button onclick="releaseMortgage('${m.id}')" 
+                        style="padding: 6px 12px; background: #eab308; color: #000; font-size: 11px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; width: auto;">
+                        Release 🔓
+                    </button>
+                </td>
+            </tr>
         `;
-        tbody.appendChild(row);
     });
 }
 
@@ -1691,13 +1692,13 @@ window.releaseMortgage = function(id) {
     const item = mortgageList.find(m => m.id === id);
     if (!item) return;
 
-    const calc = calculateProfit(item.amount, item.rate, item.date);
-    const formattedDate = new Date(item.date).toLocaleDateString('bn-BD');
+    const calc = calculateProfit(item.amount, item.rate, item.date || new Date().toISOString());
+    const formattedDate = item.date ? new Date(item.date).toLocaleDateString('bn-BD') : 'নেই';
 
     const message = `--- 🔓 বাঁধন জুয়েলার্স (বন্ধকি রিলিজ) ---\n\n` +
                     `গ্রাহক: ${item.name}\n` +
                     `জমা রাখার তারিখ: ${formattedDate}\n` +
-                    `মোট সময়: ${calc.days} দিন (হিসাবকৃত মাস: ${calc.months} মাস)\n` +
+                    `মোট সময়: ${calc.days} দিন (মাস: ${calc.months} মাস)\n` +
                     `-----------------------------------------\n` +
                     `মূল টাকা: ৳${item.amount}\n` +
                     `লাভের হার: ৳${item.rate} / ১০০ টাকা\n` +
@@ -1709,56 +1710,10 @@ window.releaseMortgage = function(id) {
     if (confirm(message)) {
         item.status = 'RELEASED';
         localStorage.setItem('mortgageList', JSON.stringify(mortgageList));
-        renderMortgageTable(); 
+        showMortgage(); 
+        if(typeof updateReport === 'function') updateReport(); 
         alert('সফলভাবে বন্ধকি মাল রিলিজ করা হয়েছে!');
     }
-}
-
-renderMortgageTable();function showMortgage(){
-
-
-let table=
-document.getElementById("mortgageTable");
-
-
-table.innerHTML="";
-
-
-
-mortgageList.forEach(m=>{
-
-
-table.innerHTML+=`
-
-<tr>
-
-
-<td>${m.id}</td>
-
-
-<td>${m.name}</td>
-
-
-<td>
-৳${m.amount}
-</td>
-
-
-<td>
-${m.rate}
- টাকা
-</td>
-
-
-
-</tr>
-
-`;
-
-
-});
-
-
 }
 
 
@@ -1845,6 +1800,7 @@ table.innerHTML+=`
 
 
 </tr>
+
 
 `;
 
@@ -1987,7 +1943,7 @@ document.getElementById("reportCash")
 
 document.getElementById("reportMortgage")
 .innerHTML=
-mortgageList.length;
+mortgageList.filter(m => m.status === 'ACTIVE' || !m.status).length;
 
 
 
@@ -2011,7 +1967,7 @@ document.getElementById("cash")
 
 document.getElementById("mortgageCount")
 .innerHTML=
-mortgageList.length;
+mortgageList.filter(m => m.status === 'ACTIVE' || !m.status).length;
 
 
 
@@ -2217,7 +2173,7 @@ alert(
 
 
 
-function calculateProfit(sale,cost){
+function calculateProfitCalc(sale,cost){
 
 
 return sale-cost;
@@ -2254,6 +2210,7 @@ window.onload=function(){
 
 showPage("dashboard");
 
+showMortgage();
 
 updateReport();
 
