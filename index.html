@@ -294,7 +294,6 @@ background: #161616;
 
 <body>
 
-<!-- LOGIN -->
 <div class="login" id="login">
 <div class="login-box">
 <div class="logo">BJ</div>
@@ -306,7 +305,6 @@ background: #161616;
 </div>
 </div>
 
-<!-- SYSTEM -->
 <div id="system">
 <div class="wrapper">
 
@@ -325,7 +323,6 @@ background: #161616;
 
     <div class="main">
 
-        <!-- DASHBOARD -->
         <div id="dashboard" class="section">
             <h1 class="gold">Admin Dashboard</h1>
             <div class="cards">
@@ -346,9 +343,16 @@ background: #161616;
                     <div class="number" id="profit">৳0</div>
                 </div>
             </div>
+            
+            <div class="card" style="margin-top:20px; border-color:#d4af37;">
+                <h3>📲 অন্য ফোনে ডাটা আদান-প্রদান (Backup & Restore)</h3>
+                <p style="font-size:12px; color:#aaa; margin-bottom:10px;">অন্য ফোনে ডাটা নিতে Backup বাটনে চাপ দিয়ে কোডটি কপি করে অন্য ফোনে পাঠান এবং Restore বক্সে পেস্ট করুন।</p>
+                <button onclick="createBackup()" style="background:#4ade80; color:black; margin-bottom:10px;">ডাটা ব্যাকআপ তৈরি করুন (Backup 📥)</button>
+                <textarea id="backupBox" placeholder="ব্যাকআপ কোড এখানে দেখা যাবে অথবা অন্য ফোন থেকে আনা কোডটি এখানে পেস্ট করুন..." style="width:100%; height:80px; background:#222; border:1px solid #333; color:#fff; border-radius:8px; padding:10px; font-size:12px; outline:none; resize:none;"></textarea>
+                <button onclick="restoreBackup()" style="background:#eab308; color:black; margin-top:8px;">ডাটা রিস্টোর করুন (Restore 📤)</button>
+            </div>
         </div>
 
-        <!-- EMPLOYEE MANAGEMENT -->
         <div id="employee" class="section">
             <h1 class="gold">Employee Management</h1>
             <div class="card">
@@ -383,10 +387,11 @@ background: #161616;
             </div>
         </div>
 
-        <!-- SALES SECTION -->
         <div id="sales" class="section">
             <h1 class="gold">Cash Memo / Sales</h1>
             <div class="card">
+                <label style="font-size: 13px; color: #aaa;">তারিখ সিলেক্ট করুন (ফাঁকা রাখলে আজকের তারিখ বসবে):</label>
+                <input id="salesDate" type="date">
                 <input id="customerName" placeholder="Customer Name">
                 <input id="customerPhone" placeholder="Phone Number">
                 <input id="productName" placeholder="Product Name">
@@ -420,10 +425,11 @@ background: #161616;
             </div>
         </div>
 
-        <!-- MORTGAGE -->
         <div id="mortgage" class="section">
             <h1 class="gold">বন্ধকি মাল Management</h1>
             <div class="card">
+                <label style="font-size: 13px; color: #aaa;">জমা রাখার তারিখ (ফাঁকা রাখলে আজকের তারিখ বসবে):</label>
+                <input id="mortgageDate" type="date">
                 <input id="mCustomer" placeholder="Customer Name">
                 <input id="mPhone" placeholder="Phone">
                 <input id="mGold" placeholder="Gold Details">
@@ -454,7 +460,6 @@ background: #161616;
             </div>
         </div>
 
-        <!-- STOCK -->
         <div id="stock" class="section">
             <h1 class="gold">Gold Inventory</h1>
             <div class="card">
@@ -480,7 +485,6 @@ background: #161616;
             </div>
         </div>
 
-        <!-- CUSTOMER DATABASE -->
         <div id="customer" class="section">
             <h1 class="gold">Customer Database</h1>
             <div class="card">
@@ -506,7 +510,6 @@ background: #161616;
             </div>
         </div>
 
-        <!-- REPORT -->
         <div id="report" class="section">
             <h1 class="gold">Reports</h1>
             <div class="cards">
@@ -554,14 +557,12 @@ function showPage(page){
     let sections = document.querySelectorAll(".section");
     sections.forEach(s=>{ s.style.display="none"; });
     document.getElementById(page).style.display="block";
-    
-    // মোবাইল স্ক্রিনে পেজ চেঞ্জ হলে একদম ওপরে স্ক্রল করার জন্য
     window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
 // EMPLOYEE SYSTEM
-let employees=[];
-let empID=0;
+let employees= JSON.parse(localStorage.getItem('BJ_EMPLOYEES')) || [];
+let empID= employees.length;
 
 function addEmployee(){
     if(!empName.value.trim()){ alert("নাম লিখুন"); return; }
@@ -581,6 +582,7 @@ function addEmployee(){
     };
 
     employees.push(data);
+    localStorage.setItem('BJ_EMPLOYEES', JSON.stringify(employees));
     showEmployees();
     alert("Employee Created\nUsername: "+user+"\nPassword: "+pass);
     empName.value = ''; empPhone.value = ''; empNid.value = '';
@@ -611,16 +613,22 @@ function showEmployees(){
 function deleteEmployee(id) {
     if (confirm("আপনি কি নিশ্চিতভাবে এই কর্মচারীকে তালিকা থেকে বাদ দিতে চান?")) {
         employees = employees.filter(e => e.id !== id);
+        localStorage.setItem('BJ_EMPLOYEES', JSON.stringify(employees));
         showEmployees();
     }
 }
 
 // SALES SYSTEM
-let memoList=[];
+let memoList= JSON.parse(localStorage.getItem("BJ_MEMO")) || [];
 function createMemoID(){ return "BJ-"+Date.now(); }
 
 function saveMemo(){
     if(!customerName.value.trim() || !price.value){ alert("দয়া করে নাম ও মূল্য দিন"); return; }
+    
+    // ম্যানুয়াল ডেট সিলেক্ট করা থাকলে সেটা নিবে, নাহলে আজকের কারেন্ট ডেট
+    let selectedDate = document.getElementById("salesDate").value;
+    let customDate = selectedDate ? new Date(selectedDate).toLocaleString('bn-BD') : new Date().toLocaleString('bn-BD');
+
     let memo={
         id:createMemoID(),
         customer: customerName.value,
@@ -631,7 +639,7 @@ function saveMemo(){
         price: Number(price.value),
         making: Number(making.value || 0),
         advance: Number(advance.value || 0),
-        date: new Date().toLocaleString()
+        date: customDate
     };
 
     memo.total = memo.price + memo.making;
@@ -644,7 +652,7 @@ function saveMemo(){
     alert("Memo Saved : "+memo.id);
     
     customerName.value=''; customerPhone.value=''; productName.value='';
-    weight.value=''; price.value=''; making.value=''; advance.value='';
+    weight.value=''; price.value=''; making.value=''; advance.value=''; document.getElementById("salesDate").value='';
 }
 
 function showMemo(){
@@ -695,6 +703,10 @@ function addMortgage() {
     const gold = document.getElementById('mGold');
     const amount = document.getElementById('mAmount');
     const rate = document.getElementById('mRate');
+    
+    // ম্যানুয়াল ডেট হ্যান্ডেলিং
+    let mDateInput = document.getElementById("mortgageDate").value;
+    let finalMortgageDate = mDateInput ? new Date(mDateInput).toISOString() : new Date().toISOString();
 
     if (!customer.value.trim() || !amount.value) {
         alert('দয়া করে নাম এবং টাকার পরিমাণ সঠিকভাবে দিন!');
@@ -708,14 +720,14 @@ function addMortgage() {
         gold: gold.value,
         amount: Number(amount.value),
         rate: Number(rate.value),
-        date: new Date().toISOString(), 
+        date: finalMortgageDate, 
         status: 'ACTIVE'
     };
 
     mortgageList.push(m);
     localStorage.setItem('mortgageList', JSON.stringify(mortgageList));
 
-    customer.value = ''; phone.value = ''; gold.value = ''; amount.value = '';
+    customer.value = ''; phone.value = ''; gold.value = ''; amount.value = ''; document.getElementById("mortgageDate").value = '';
     
     showMortgage();
     updateReport(); 
@@ -810,11 +822,12 @@ window.releaseMortgage = function(id) {
 }
 
 // STOCK SYSTEM
-let stockList=[];
+let stockList= JSON.parse(localStorage.getItem('BJ_STOCK')) || [];
 function addStock(){
     if(!stockName.value.trim()){ return; }
     let s={ name: stockName.value, weight: stockWeight.value, qty: Number(stockQty.value || 0) };
     stockList.push(s);
+    localStorage.setItem('BJ_STOCK', JSON.stringify(stockList));
     showStock();
     alert("Stock Added");
     stockName.value=''; stockWeight.value=''; stockQty.value='';
@@ -829,11 +842,12 @@ function showStock(){
 }
 
 // CUSTOMER SYSTEM
-let customers=[];
+let customers= JSON.parse(localStorage.getItem('BJ_CUSTOMERS')) || [];
 function addCustomer(){
     if(!cusName.value.trim()){ return; }
     let c={ name: cusName.value, phone: cusPhone.value, address: cusAddress.value };
     customers.push(c);
+    localStorage.setItem('BJ_CUSTOMERS', JSON.stringify(customers));
     showCustomers();
     alert("Customer Saved");
     cusName.value=''; cusPhone.value=''; cusAddress.value='';
@@ -865,31 +879,39 @@ function updateReport(){
     document.getElementById("profit").innerHTML= "৳"+(sales*0.05);
 }
 
-// LOAD OLD MEMO
-let oldMemo = localStorage.getItem("BJ_MEMO");
-if(oldMemo){ memoList = JSON.parse(oldMemo); }
-
-// BACKUP SYSTEM
+// BACKUP & RESTORE BETWEEN PHONES (NEW REAL INTERFACE)
 function createBackup(){
     let data={ memo:memoList, employee:employees, mortgage:mortgageList, stock:stockList, customer:customers };
-    localStorage.setItem("BJ_BACKUP", JSON.stringify(data));
-    alert("Backup Completed");
+    let base64Data = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+    document.getElementById("backupBox").value = base64Data;
+    document.getElementById("backupBox").select();
+    document.execCommand("copy");
+    alert("সফলভাবে অল ডাটা ব্যাকআপ কোড তৈরি ও কপি হয়েছে! এটি অন্য ফোনে পাঠিয়ে দিন।");
 }
 
 function restoreBackup(){
-    let data = localStorage.getItem("BJ_BACKUP");
-    if(data){
-        let backup = JSON.parse(data);
-        memoList = backup.memo || [];
-        employees = backup.employee || [];
-        mortgageList = backup.mortgage || [];
-        stockList = backup.stock || [];
-        customers = backup.customer || [];
+    let token = document.getElementById("backupBox").value.trim();
+    if(!token){ alert("দয়া করে রিস্টোর করার জন্য ব্যাকআপ বক্সে কোডটি পেস্ট করুন।"); return; }
+    try {
+        let decodedData = JSON.parse(decodeURIComponent(escape(atob(token))));
+        
+        memoList = decodedData.memo || [];
+        employees = decodedData.employee || [];
+        mortgageList = decodedData.mortgage || [];
+        stockList = decodedData.stock || [];
+        customers = decodedData.customer || [];
+
+        localStorage.setItem("BJ_MEMO", JSON.stringify(memoList));
+        localStorage.setItem("BJ_EMPLOYEES", JSON.stringify(employees));
+        localStorage.setItem("mortgageList", JSON.stringify(mortgageList));
+        localStorage.setItem("BJ_STOCK", JSON.stringify(stockList));
+        localStorage.setItem("BJ_CUSTOMERS", JSON.stringify(customers));
 
         showMemo(); showEmployees(); showMortgage(); showStock(); showCustomers(); updateReport();
-        alert("Backup Restored");
-    } else {
-        alert("No Backup Found");
+        document.getElementById("backupBox").value = "";
+        alert("🎉 অভিনন্দন! সব ডাটা এই ফোনে সফলভাবে রিস্টোর হয়েছে।");
+    } catch(err) {
+        alert("ভুল ব্যাকআপ কোড! দয়া করে সঠিক কোডটি কপি করে এনে আবার পেস্ট করুন।");
     }
 }
 
@@ -897,7 +919,10 @@ function restoreBackup(){
 window.onload=function(){
     showPage("dashboard");
     showMemo();
+    showEmployees();
     showMortgage();
+    showStock();
+    showCustomers();
     updateReport();
 }
 
