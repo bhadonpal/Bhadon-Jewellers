@@ -223,7 +223,7 @@ border: 1px solid #222;
 table{
 width: 100%;
 border-collapse:collapse;
-min-width: 500px; /* টেবিল যাতে সংকুচিত না হয় */
+min-width: 500px;
 background: #111;
 }
 
@@ -245,7 +245,7 @@ tr:hover {
 background: #161616;
 }
 
-/* DESKTOP SCREEN ADJUSTMENT (কম্পিউটারের জন্য রূপান্তর) */
+/* DESKTOP SCREEN ADJUSTMENT */
 @media (min-width: 768px) {
     .wrapper {
         flex-direction: row;
@@ -345,11 +345,9 @@ background: #161616;
             </div>
             
             <div class="card" style="margin-top:20px; border-color:#d4af37;">
-                <h3>📲 অন্য ফোনে ডাটা আদান-প্রদান (Backup & Restore)</h3>
-                <p style="font-size:12px; color:#aaa; margin-bottom:10px;">অন্য ফোনে ডাটা নিতে Backup বাটনে চাপ দিয়ে কোডটি কপি করে অন্য ফোনে পাঠান এবং Restore বক্সে পেস্ট করুন।</p>
-                <button onclick="createBackup()" style="background:#4ade80; color:black; margin-bottom:10px;">ডাটা ব্যাকআপ তৈরি করুন (Backup 📥)</button>
-                <textarea id="backupBox" placeholder="ব্যাকআপ কোড এখানে দেখা যাবে অথবা অন্য ফোন থেকে আনা কোডটি এখানে পেস্ট করুন..." style="width:100%; height:80px; background:#222; border:1px solid #333; color:#fff; border-radius:8px; padding:10px; font-size:12px; outline:none; resize:none;"></textarea>
-                <button onclick="restoreBackup()" style="background:#eab308; color:black; margin-top:8px;">ডাটা রিস্টোর করুন (Restore 📤)</button>
+                <h3>🔄 লাইভ ক্লাউড ডেটাবেজ (Google Sheets Auto-Sync)</h3>
+                <p style="font-size:13px; color:#4ade80; margin-bottom:10px;">🟢 অনলাইন ক্লাউড সিঙ্ক চালু আছে। যেকোনো ফোন থেকে পরিবর্তন করলে সাথে সাথে সব ফোনে লাইভ আপডেট হবে।</p>
+                <button onclick="syncAllFromSheet()" style="background:#d4af37; color:black;">ম্যানুয়াল রিফ্রেশ / সিঙ্ক করুন 🔄</button>
             </div>
         </div>
 
@@ -538,6 +536,71 @@ background: #161616;
 
 <script>
 
+// GOOGLE SHEETS LIVE SYNC URL
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPNGEqIK4sAKPLGZbYrzOT_-kyg7LgG-kf_P9d9LXEDeosz-jqie710Pji5xNIKdEI/exec";
+
+// DATA VARIABLES
+let employees = JSON.parse(localStorage.getItem('BJ_EMPLOYEES')) || [];
+let memoList = JSON.parse(localStorage.getItem("BJ_MEMO")) || [];
+let mortgageList = JSON.parse(localStorage.getItem('mortgageList')) || [];
+let stockList = JSON.parse(localStorage.getItem('BJ_STOCK')) || [];
+let customers = JSON.parse(localStorage.getItem('BJ_CUSTOMERS')) || [];
+
+// SAVE LOCAL & SYNC CLOUD
+function saveAndSyncAll() {
+    localStorage.setItem('BJ_EMPLOYEES', JSON.stringify(employees));
+    localStorage.setItem("BJ_MEMO", JSON.stringify(memoList));
+    localStorage.setItem('mortgageList', JSON.stringify(mortgageList));
+    localStorage.setItem('BJ_STOCK', JSON.stringify(stockList));
+    localStorage.setItem('BJ_CUSTOMERS', JSON.stringify(customers));
+
+    let fullData = { memo: memoList, employee: employees, mortgage: mortgageList, stock: stockList, customer: customers };
+
+    fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(fullData)
+    }).then(() => {
+        console.log("Synced to Cloud Sheet successfully!");
+    }).catch(err => console.error("Cloud Sync Error:", err));
+}
+
+// FETCH DATA FROM CLOUD
+function syncAllFromSheet() {
+    fetch(SCRIPT_URL)
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.length > 0) {
+                try {
+                    let lastData = JSON.parse(data[data.length - 1][0]);
+                    memoList = lastData.memo || [];
+                    employees = lastData.employee || [];
+                    mortgageList = lastData.mortgage || [];
+                    stockList = lastData.stock || [];
+                    customers = lastData.customer || [];
+
+                    localStorage.setItem("BJ_MEMO", JSON.stringify(memoList));
+                    localStorage.setItem("BJ_EMPLOYEES", JSON.stringify(employees));
+                    localStorage.setItem("mortgageList", JSON.stringify(mortgageList));
+                    localStorage.setItem("BJ_STOCK", JSON.stringify(stockList));
+                    localStorage.setItem("BJ_CUSTOMERS", JSON.stringify(customers));
+
+                    renderAllViews();
+                } catch (e) { console.log("Init parsing or empty sheet"); }
+            }
+        }).catch(err => console.error("Error loading live data:", err));
+}
+
+function renderAllViews() {
+    showMemo();
+    showEmployees();
+    showMortgage();
+    showStock();
+    showCustomers();
+    updateReport();
+}
+
 // LOGIN
 function loginUser(){
     let u = document.getElementById("username").value;
@@ -561,8 +624,7 @@ function showPage(page){
 }
 
 // EMPLOYEE SYSTEM
-let employees= JSON.parse(localStorage.getItem('BJ_EMPLOYEES')) || [];
-let empID= employees.length;
+let empID = employees.length;
 
 function addEmployee(){
     if(!empName.value.trim()){ alert("নাম লিখুন"); return; }
@@ -582,7 +644,7 @@ function addEmployee(){
     };
 
     employees.push(data);
-    localStorage.setItem('BJ_EMPLOYEES', JSON.stringify(employees));
+    saveAndSyncAll();
     showEmployees();
     alert("Employee Created\nUsername: "+user+"\nPassword: "+pass);
     empName.value = ''; empPhone.value = ''; empNid.value = '';
@@ -613,19 +675,17 @@ function showEmployees(){
 function deleteEmployee(id) {
     if (confirm("আপনি কি নিশ্চিতভাবে এই কর্মচারীকে তালিকা থেকে বাদ দিতে চান?")) {
         employees = employees.filter(e => e.id !== id);
-        localStorage.setItem('BJ_EMPLOYEES', JSON.stringify(employees));
+        saveAndSyncAll();
         showEmployees();
     }
 }
 
 // SALES SYSTEM
-let memoList= JSON.parse(localStorage.getItem("BJ_MEMO")) || [];
 function createMemoID(){ return "BJ-"+Date.now(); }
 
 function saveMemo(){
     if(!customerName.value.trim() || !price.value){ alert("দয়া করে নাম ও মূল্য দিন"); return; }
     
-    // ম্যানুয়াল ডেট সিলেক্ট করা থাকলে সেটা নিবে, নাহলে আজকের কারেন্ট ডেট
     let selectedDate = document.getElementById("salesDate").value;
     let customDate = selectedDate ? new Date(selectedDate).toLocaleString('bn-BD') : new Date().toLocaleString('bn-BD');
 
@@ -646,7 +706,7 @@ function saveMemo(){
     memo.due = memo.total - memo.advance;
 
     memoList.push(memo);
-    localStorage.setItem("BJ_MEMO", JSON.stringify(memoList));
+    saveAndSyncAll();
     showMemo();
     updateReport();
     alert("Memo Saved : "+memo.id);
@@ -695,8 +755,6 @@ function printLastMemo(){
 }
 
 // MORTGAGE SYSTEM
-let mortgageList = JSON.parse(localStorage.getItem('mortgageList')) || [];
-
 function addMortgage() {
     const customer = document.getElementById('mCustomer');
     const phone = document.getElementById('mPhone');
@@ -704,7 +762,6 @@ function addMortgage() {
     const amount = document.getElementById('mAmount');
     const rate = document.getElementById('mRate');
     
-    // ম্যানুয়াল ডেট হ্যান্ডেলিং
     let mDateInput = document.getElementById("mortgageDate").value;
     let finalMortgageDate = mDateInput ? new Date(mDateInput).toISOString() : new Date().toISOString();
 
@@ -725,7 +782,7 @@ function addMortgage() {
     };
 
     mortgageList.push(m);
-    localStorage.setItem('mortgageList', JSON.stringify(mortgageList));
+    saveAndSyncAll();
 
     customer.value = ''; phone.value = ''; gold.value = ''; amount.value = ''; document.getElementById("mortgageDate").value = '';
     
@@ -814,7 +871,7 @@ window.releaseMortgage = function(id) {
 
     if (confirm(message)) {
         item.status = 'RELEASED';
-        localStorage.setItem('mortgageList', JSON.stringify(mortgageList));
+        saveAndSyncAll();
         showMortgage(); 
         updateReport(); 
         alert('সফলভাবে বন্ধকি মাল রিলিজ করা হয়েছে!');
@@ -822,12 +879,11 @@ window.releaseMortgage = function(id) {
 }
 
 // STOCK SYSTEM
-let stockList= JSON.parse(localStorage.getItem('BJ_STOCK')) || [];
 function addStock(){
     if(!stockName.value.trim()){ return; }
     let s={ name: stockName.value, weight: stockWeight.value, qty: Number(stockQty.value || 0) };
     stockList.push(s);
-    localStorage.setItem('BJ_STOCK', JSON.stringify(stockList));
+    saveAndSyncAll();
     showStock();
     alert("Stock Added");
     stockName.value=''; stockWeight.value=''; stockQty.value='';
@@ -842,12 +898,11 @@ function showStock(){
 }
 
 // CUSTOMER SYSTEM
-let customers= JSON.parse(localStorage.getItem('BJ_CUSTOMERS')) || [];
 function addCustomer(){
     if(!cusName.value.trim()){ return; }
     let c={ name: cusName.value, phone: cusPhone.value, address: cusAddress.value };
     customers.push(c);
-    localStorage.setItem('BJ_CUSTOMERS', JSON.stringify(customers));
+    saveAndSyncAll();
     showCustomers();
     alert("Customer Saved");
     cusName.value=''; cusPhone.value=''; cusAddress.value='';
@@ -879,51 +934,10 @@ function updateReport(){
     document.getElementById("profit").innerHTML= "৳"+(sales*0.05);
 }
 
-// BACKUP & RESTORE BETWEEN PHONES (NEW REAL INTERFACE)
-function createBackup(){
-    let data={ memo:memoList, employee:employees, mortgage:mortgageList, stock:stockList, customer:customers };
-    let base64Data = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
-    document.getElementById("backupBox").value = base64Data;
-    document.getElementById("backupBox").select();
-    document.execCommand("copy");
-    alert("সফলভাবে অল ডাটা ব্যাকআপ কোড তৈরি ও কপি হয়েছে! এটি অন্য ফোনে পাঠিয়ে দিন।");
-}
-
-function restoreBackup(){
-    let token = document.getElementById("backupBox").value.trim();
-    if(!token){ alert("দয়া করে রিস্টোর করার জন্য ব্যাকআপ বক্সে কোডটি পেস্ট করুন।"); return; }
-    try {
-        let decodedData = JSON.parse(decodeURIComponent(escape(atob(token))));
-        
-        memoList = decodedData.memo || [];
-        employees = decodedData.employee || [];
-        mortgageList = decodedData.mortgage || [];
-        stockList = decodedData.stock || [];
-        customers = decodedData.customer || [];
-
-        localStorage.setItem("BJ_MEMO", JSON.stringify(memoList));
-        localStorage.setItem("BJ_EMPLOYEES", JSON.stringify(employees));
-        localStorage.setItem("mortgageList", JSON.stringify(mortgageList));
-        localStorage.setItem("BJ_STOCK", JSON.stringify(stockList));
-        localStorage.setItem("BJ_CUSTOMERS", JSON.stringify(customers));
-
-        showMemo(); showEmployees(); showMortgage(); showStock(); showCustomers(); updateReport();
-        document.getElementById("backupBox").value = "";
-        alert("🎉 অভিনন্দন! সব ডাটা এই ফোনে সফলভাবে রিস্টোর হয়েছে।");
-    } catch(err) {
-        alert("ভুল ব্যাকআপ কোড! দয়া করে সঠিক কোডটি কপি করে এনে আবার পেস্ট করুন।");
-    }
-}
-
-// START PAGE
+// START PAGE & AUTO-LOAD FROM CLOUD
 window.onload=function(){
     showPage("dashboard");
-    showMemo();
-    showEmployees();
-    showMortgage();
-    showStock();
-    showCustomers();
-    updateReport();
+    syncAllFromSheet();
 }
 
 </script>
